@@ -29,6 +29,7 @@ AudioManager="*res://scripts/AudioManager.gd"
 SaveManager="*res://scripts/SaveManager.gd"
 GameModeManager="*res://scripts/GameModeManager.gd"
 WordExamples="*res://scripts/WordExamples.gd"
+FontFallback="*res://scripts/FontFallback.gd"
 [display]
 
 window/size/viewport_height=720
