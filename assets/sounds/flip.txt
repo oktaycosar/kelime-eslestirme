@@ -1,0 +1,4 @@
+Bu dosya bir PLACEHOLDER'dır (yer tutucu).
+Gerçek ses dosyası: flip.wav (veya .ogg)
+Açıklama: Kart açma sesi (kısa tık/kart dönme efekti).
+Nasıl ekleneceğini assets/sounds/README.txt dosyasından okuyun.

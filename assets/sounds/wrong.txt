@@ -1,0 +1,4 @@
+Bu dosya bir PLACEHOLDER'dir (yer tutucu).
+Gerçek ses dosyası: wrong.wav (veya .ogg)
+Açıklama: Yanlış eşleşme sesi (kısa "buzz" efekti).
+Nasıl ekleneceğini assets/sounds/README.txt dosyasından okuyun.

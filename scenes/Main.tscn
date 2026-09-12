@@ -1,0 +1,487 @@
+[gd_scene load_steps=9 format=3 uid="uid://bmain01xyz"]
+
+[ext_resource type="Script" path="res://scripts/Main.gd" id="1_main_script"]
+[ext_resource type="Script" path="res://scripts/UIManager.gd" id="2_ui_script"]
+[ext_resource type="Script" path="res://scripts/ConnectionRibbon.gd" id="3_ribbon_script"]
+[ext_resource type="PackedScene" path="res://scenes/GameOverPanel.tscn" id="4_gop_scene"]
+[ext_resource type="PackedScene" path="res://scenes/WordCardPanel.tscn" id="5_wcp_scene"]
+
+[sub_resource type="StyleBoxFlat" id="header_style"]
+bg_color = Color(0.18, 0.24, 0.34, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.4, 0.5, 0.7, 0.7)
+
+[sub_resource type="StyleBoxFlat" id="turkish_header_style"]
+bg_color = Color(0.95, 0.78, 0.45, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.78, 0.55, 0.2, 1)
+content_margin_left = 8.0
+content_margin_top = 4.0
+content_margin_right = 8.0
+content_margin_bottom = 4.0
+
+[sub_resource type="StyleBoxFlat" id="english_header_style"]
+bg_color = Color(0.45, 0.85, 0.55, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.18, 0.55, 0.32, 1)
+content_margin_left = 8.0
+content_margin_top = 4.0
+content_margin_right = 8.0
+content_margin_bottom = 4.0
+
+[sub_resource type="StyleBoxFlat" id="pause_dialog_style"]
+bg_color = Color(0.16, 0.22, 0.32, 1)
+corner_radius_top_left = 18
+corner_radius_top_right = 18
+corner_radius_bottom_right = 18
+corner_radius_bottom_left = 18
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0.95, 0.85, 0.4, 1)
+
+[node name="Main" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+script = ExtResource("1_main_script")
+
+[node name="Background" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.1, 0.12, 0.18, 1)
+
+[node name="RootVBox" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 24.0
+offset_top = 12.0
+offset_right = -24.0
+offset_bottom = -12.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 8
+mouse_filter = 2
+
+[node name="TitleLabel" type="Label" parent="RootVBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 0
+mouse_filter = 2
+theme_override_font_sizes/font_size = 36
+text = "KELİME EŞLEŞTİRME"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="SubtitleLabel" type="Label" parent="RootVBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 0
+mouse_filter = 2
+theme_override_font_sizes/font_size = 16
+theme_override_colors/font_color = Color(0.85, 0.85, 0.92, 1)
+text = "🇹🇷 Türkçe → 🇬🇧 English • Soldan seç, sağdan eşleştir"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="HeaderPanel" type="Panel" parent="RootVBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 0
+custom_minimum_size = Vector2(0, 56)
+mouse_filter = 2
+theme_override_styles/panel = SubResource("header_style")
+
+[node name="HeaderHBox" type="HBoxContainer" parent="RootVBox/HeaderPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 12.0
+offset_top = 8.0
+offset_right = -12.0
+offset_bottom = -8.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 10
+mouse_filter = 2
+
+[node name="ScoreLabel" type="Label" parent="RootVBox/HeaderPanel/HeaderHBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 1
+mouse_filter = 2
+theme_override_font_sizes/font_size = 18
+text = "Skor: 0"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="MatchLabel" type="Label" parent="RootVBox/HeaderPanel/HeaderHBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 1
+mouse_filter = 2
+theme_override_font_sizes/font_size = 18
+text = "Eşleşme: 0/6"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ErrorLabel" type="Label" parent="RootVBox/HeaderPanel/HeaderHBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 1
+mouse_filter = 2
+theme_override_font_sizes/font_size = 18
+text = "Hata: 0"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="TimeLabel" type="Label" parent="RootVBox/HeaderPanel/HeaderHBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 1
+mouse_filter = 2
+theme_override_font_sizes/font_size = 18
+text = "Süre: 00:00"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="MovesLabel" type="Label" parent="RootVBox/HeaderPanel/HeaderHBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 1
+mouse_filter = 2
+theme_override_font_sizes/font_size = 18
+text = "Hamle: 0"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ComboLabel" type="Label" parent="RootVBox/HeaderPanel/HeaderHBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 1
+mouse_filter = 2
+theme_override_font_sizes/font_size = 18
+text = "Combo: 0x"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ControlBar" type="HBoxContainer" parent="RootVBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 0
+theme_override_constants/separation = 10
+alignment = 1
+mouse_filter = 2
+
+[node name="HintButton" type="Button" parent="RootVBox/ControlBar"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_minimum_size = Vector2(180, 44)
+mouse_filter = 0
+theme_override_font_sizes/font_size = 18
+text = "💡 İpucu (3/3)"
+
+[node name="PauseButton" type="Button" parent="RootVBox/ControlBar"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_minimum_size = Vector2(180, 44)
+mouse_filter = 0
+theme_override_font_sizes/font_size = 18
+text = "Duraklat ⏸"
+
+[node name="MuteButton" type="Button" parent="RootVBox/ControlBar"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_minimum_size = Vector2(180, 44)
+mouse_filter = 0
+theme_override_font_sizes/font_size = 18
+text = "🔊 Sesi Kapat"
+
+[node name="CategoryBar" type="HBoxContainer" parent="RootVBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 0
+theme_override_constants/separation = 8
+alignment = 1
+mouse_filter = 2
+
+[node name="CategoryTitle" type="Label" parent="RootVBox/CategoryBar"]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 1
+mouse_filter = 2
+theme_override_font_sizes/font_size = 16
+text = "Kategoriler:"
+vertical_alignment = 1
+
+[node name="CategoryFlow" type="HFlowContainer" parent="RootVBox/CategoryBar"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 1
+theme_override_constants/h_separation = 8
+theme_override_constants/v_separation = 8
+mouse_filter = 2
+
+[node name="GameModeBar" type="HBoxContainer" parent="RootVBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 0
+theme_override_constants/separation = 8
+alignment = 1
+mouse_filter = 2
+
+[node name="GameModeTitle" type="Label" parent="RootVBox/GameModeBar"]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 1
+mouse_filter = 2
+theme_override_font_sizes/font_size = 16
+text = "Mod:"
+vertical_alignment = 1
+
+[node name="GameModeFlow" type="HFlowContainer" parent="RootVBox/GameModeBar"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 1
+theme_override_constants/h_separation = 8
+theme_override_constants/v_separation = 8
+mouse_filter = 2
+
+[node name="WrongSideMessage" type="Label" parent="RootVBox"]
+visible = false
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 0
+mouse_filter = 2
+theme_override_font_sizes/font_size = 18
+theme_override_colors/font_color = Color(0.96, 0.55, 0.4, 1)
+text = ""
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ColumnHeaders" type="HBoxContainer" parent="RootVBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 0
+theme_override_constants/separation = 16
+mouse_filter = 2
+
+[node name="TurkishHeaderPanel" type="Panel" parent="RootVBox/ColumnHeaders"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 0
+custom_minimum_size = Vector2(0, 36)
+mouse_filter = 2
+theme_override_styles/panel = SubResource("turkish_header_style")
+
+[node name="TurkishHeaderLabel" type="Label" parent="RootVBox/ColumnHeaders/TurkishHeaderPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_font_sizes/font_size = 20
+theme_override_colors/font_color = Color(0.35, 0.22, 0.05, 1)
+text = "🇹🇷 TÜRKÇE"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="EnglishHeaderPanel" type="Panel" parent="RootVBox/ColumnHeaders"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 0
+custom_minimum_size = Vector2(0, 36)
+mouse_filter = 2
+theme_override_styles/panel = SubResource("english_header_style")
+
+[node name="EnglishHeaderLabel" type="Label" parent="RootVBox/ColumnHeaders/EnglishHeaderPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_font_sizes/font_size = 20
+theme_override_colors/font_color = Color(0.08, 0.28, 0.18, 1)
+text = "🇬🇧 İNGİLİZCE"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="GameArea" type="Control" parent="RootVBox"]
+layout_mode = 3
+size_flags_horizontal = 3
+size_flags_vertical = 3
+mouse_filter = 2
+
+[node name="ColumnsHBox" type="HBoxContainer" parent="RootVBox/GameArea"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 16
+mouse_filter = 2
+
+[node name="TurkishColumn" type="VBoxContainer" parent="RootVBox/GameArea/ColumnsHBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 6
+mouse_filter = 2
+
+[node name="TurkishCards" type="VBoxContainer" parent="RootVBox/GameArea/ColumnsHBox/TurkishColumn"]
+layout_mode = 3
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 6
+mouse_filter = 2
+
+[node name="EnglishColumn" type="VBoxContainer" parent="RootVBox/GameArea/ColumnsHBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 6
+mouse_filter = 2
+
+[node name="EnglishCards" type="VBoxContainer" parent="RootVBox/GameArea/ColumnsHBox/EnglishColumn"]
+layout_mode = 3
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 6
+mouse_filter = 2
+
+[node name="ConnectionRibbon" type="Control" parent="RootVBox/GameArea"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("3_ribbon_script")
+
+[node name="UIManager" type="Node" parent="."]
+script = ExtResource("2_ui_script")
+
+[node name="GameOverPanel" parent="." instance=ExtResource("4_gop_scene")]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 0
+
+[node name="PauseOverlay" type="Control" parent="."]
+visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 0
+
+[node name="OverlayColor" type="ColorRect" parent="PauseOverlay"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 0.7)
+
+[node name="CenterContainer" type="CenterContainer" parent="PauseOverlay"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="DialogPanel" type="Panel" parent="PauseOverlay/CenterContainer"]
+layout_mode = 2
+custom_minimum_size = Vector2(420, 220)
+size_flags_horizontal = 4
+size_flags_vertical = 4
+mouse_filter = 2
+theme_override_styles/panel = SubResource("pause_dialog_style")
+
+[node name="VBox" type="VBoxContainer" parent="PauseOverlay/CenterContainer/DialogPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 24.0
+offset_top = 24.0
+offset_right = -24.0
+offset_bottom = -24.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 18
+mouse_filter = 2
+
+[node name="PauseTitleLabel" type="Label" parent="PauseOverlay/CenterContainer/DialogPanel/VBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+mouse_filter = 2
+theme_override_font_sizes/font_size = 32
+text = "⏸ OYUN DURAKLATILDI"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ResumeButton" type="Button" parent="PauseOverlay/CenterContainer/DialogPanel/VBox"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 3
+custom_minimum_size = Vector2(220, 56)
+mouse_filter = 0
+theme_override_font_sizes/font_size = 24
+text = "Devam et ▶"
+
+[node name="WordCardPanel" parent="." instance=ExtResource("5_wcp_scene")]
+visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 0

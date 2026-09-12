@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Godot project icon - Türkçe-İngilizce Memory -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#2a4a6e"/>
+      <stop offset="1" stop-color="#1c2f48"/>
+    </linearGradient>
+    <linearGradient id="tr" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#f7c668"/>
+      <stop offset="1" stop-color="#e09f3d"/>
+    </linearGradient>
+    <linearGradient id="en" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#8fd1f2"/>
+      <stop offset="1" stop-color="#4a9fd4"/>
+    </linearGradient>
+  </defs>
+  <rect x="2" y="2" width="124" height="124" rx="16" fill="url(#bg)" stroke="#3a5a80" stroke-width="2"/>
+  <!-- Türkçe kart (sol üst) -->
+  <rect x="14" y="18" width="44" height="40" rx="6" fill="url(#tr)" stroke="#a06a1f" stroke-width="2"/>
+  <text x="36" y="46" font-family="DejaVu Sans, Arial, sans-serif" font-size="26" font-weight="bold" text-anchor="middle" fill="#3d2a00">TR</text>
+  <!-- İngilizce kart (sağ alt) -->
+  <rect x="70" y="70" width="44" height="40" rx="6" fill="url(#en)" stroke="#1f5a8c" stroke-width="2"/>
+  <text x="92" y="98" font-family="DejaVu Sans, Arial, sans-serif" font-size="26" font-weight="bold" text-anchor="middle" fill="#001b2d">EN</text>
+  <!-- Bağlantı çizgisi -->
+  <path d="M 36 58 Q 64 64 92 70" stroke="#f2e58c" stroke-width="3" stroke-dasharray="6 4" fill="none"/>
+</svg>

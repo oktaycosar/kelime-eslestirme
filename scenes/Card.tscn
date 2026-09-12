@@ -1,0 +1,90 @@
+[gd_scene load_steps=4 format=3 uid="uid://b1card01xyz"]
+
+[ext_resource type="Script" path="res://scripts/Card.gd" id="1_card_script"]
+
+[sub_resource type="StyleBoxFlat" id="back_style"]
+bg_color = Color(0.2, 0.36, 0.55, 1)
+corner_radius_top_left = 14
+corner_radius_top_right = 14
+corner_radius_bottom_right = 14
+corner_radius_bottom_left = 14
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.5, 0.62, 0.82, 1)
+
+[sub_resource type="StyleBoxFlat" id="front_style"]
+bg_color = Color(0.98, 0.85, 0.6, 1)
+corner_radius_top_left = 14
+corner_radius_top_right = 14
+corner_radius_bottom_right = 14
+corner_radius_bottom_left = 14
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.7, 0.55, 0.3, 1)
+
+[node name="Card" type="TextureButton"]
+custom_minimum_size = Vector2(180, 70)
+offset_right = 180.0
+offset_bottom = 70.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+ignore_texture_size = true
+stretch_mode = 5
+mouse_filter = 0
+script = ExtResource("1_card_script")
+
+[node name="BackPanel" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("back_style")
+
+[node name="BackLabel" type="Label" parent="BackPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_font_sizes/font_size = 32
+text = "?"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="FrontPanel" type="Panel" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("front_style")
+
+[node name="WordLabel" type="Label" parent="FrontPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 6.0
+offset_top = 4.0
+offset_right = -6.0
+offset_bottom = -4.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_font_sizes/font_size = 18
+text = "KELİME"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3

@@ -1,0 +1,240 @@
+[gd_scene load_steps=5 format=3 uid="uid://bwordcard01xyz"]
+
+[ext_resource type="Script" path="res://scripts/WordCardPanel.gd" id="1_wcp_script"]
+
+[sub_resource type="StyleBoxFlat" id="dialog_style"]
+bg_color = Color(0.16, 0.22, 0.32, 1)
+corner_radius_top_left = 18
+corner_radius_top_right = 18
+corner_radius_bottom_right = 18
+corner_radius_bottom_left = 18
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0.95, 0.85, 0.4, 1)
+content_margin_left = 18.0
+content_margin_top = 18.0
+content_margin_right = 18.0
+content_margin_bottom = 18.0
+
+[sub_resource type="StyleBoxFlat" id="tr_button_style"]
+bg_color = Color(0.95, 0.78, 0.45, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.6, 0.45, 0.2, 1)
+content_margin_left = 10.0
+content_margin_top = 6.0
+content_margin_right = 10.0
+content_margin_bottom = 6.0
+
+[sub_resource type="StyleBoxFlat" id="en_button_style"]
+bg_color = Color(0.45, 0.85, 0.55, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.18, 0.55, 0.32, 1)
+content_margin_left = 10.0
+content_margin_top = 6.0
+content_margin_right = 10.0
+content_margin_bottom = 6.0
+
+[node name="WordCardPanel" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 0
+script = ExtResource("1_wcp_script")
+
+[node name="OverlayColor" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 0.7)
+
+[node name="CenterContainer" type="CenterContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="DialogPanel" type="Panel" parent="CenterContainer"]
+layout_mode = 2
+custom_minimum_size = Vector2(560, 480)
+size_flags_horizontal = 4
+size_flags_vertical = 4
+mouse_filter = 2
+theme_override_styles/panel = SubResource("dialog_style")
+
+[node name="VBox" type="VBoxContainer" parent="CenterContainer/DialogPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 24.0
+offset_top = 24.0
+offset_right = -24.0
+offset_bottom = -24.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 12
+mouse_filter = 2
+
+[node name="TitleLabel" type="Label" parent="CenterContainer/DialogPanel/VBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 0
+mouse_filter = 2
+theme_override_font_sizes/font_size = 28
+theme_override_colors/font_color = Color(1, 0.95, 0.7, 1)
+text = "📖 Kelime Detayı"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="CategoryLabel" type="Label" parent="CenterContainer/DialogPanel/VBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 0
+mouse_filter = 2
+theme_override_font_sizes/font_size = 18
+theme_override_colors/font_color = Color(0.85, 0.85, 0.92, 1)
+text = "🏷️ Kategori"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="HSeparator" type="HSeparator" parent="CenterContainer/DialogPanel/VBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 2
+
+[node name="TurkishLabel" type="Label" parent="CenterContainer/DialogPanel/VBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 0
+mouse_filter = 2
+theme_override_font_sizes/font_size = 42
+theme_override_colors/font_color = Color(0.98, 0.82, 0.45, 1)
+text = "TÜRKÇE"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="EnglishLabel" type="Label" parent="CenterContainer/DialogPanel/VBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 0
+mouse_filter = 2
+theme_override_font_sizes/font_size = 42
+theme_override_colors/font_color = Color(0.45, 0.92, 0.55, 1)
+text = "ENGLISH"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="PronunciationLabel" type="Label" parent="CenterContainer/DialogPanel/VBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 0
+mouse_filter = 2
+theme_override_font_sizes/font_size = 18
+theme_override_colors/font_color = Color(0.7, 0.78, 0.88, 1)
+text = "/pron/"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ExampleTitleLabel" type="Label" parent="CenterContainer/DialogPanel/VBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 0
+mouse_filter = 2
+theme_override_font_sizes/font_size = 18
+theme_override_colors/font_color = Color(1, 0.95, 0.7, 1)
+text = "📝 Örnek Cümleler"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="TRSentenceLabel" type="Label" parent="CenterContainer/DialogPanel/VBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 0
+mouse_filter = 2
+theme_override_font_sizes/font_size = 16
+theme_override_colors/font_color = Color(0.95, 0.92, 0.85, 1)
+text = "🇹🇷 TR cümle"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="ENSentenceLabel" type="Label" parent="CenterContainer/DialogPanel/VBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 0
+mouse_filter = 2
+theme_override_font_sizes/font_size = 16
+theme_override_colors/font_color = Color(0.85, 0.95, 0.85, 1)
+text = "🇬🇧 EN sentence"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="ButtonRow" type="HBoxContainer" parent="CenterContainer/DialogPanel/VBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 0
+theme_override_constants/separation = 12
+alignment = 1
+mouse_filter = 2
+
+[node name="ListenTRButton" type="Button" parent="CenterContainer/DialogPanel/VBox/ButtonRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_minimum_size = Vector2(140, 44)
+mouse_filter = 0
+theme_override_font_sizes/font_size = 16
+theme_override_colors/font_color = Color(0.18, 0.12, 0.05, 1)
+theme_override_styles/normal = SubResource("tr_button_style")
+theme_override_styles/hover = SubResource("tr_button_style")
+theme_override_styles/pressed = SubResource("tr_button_style")
+theme_override_styles/focus = SubResource("tr_button_style")
+text = "🔊 Dinle (TR)"
+
+[node name="ListenENButton" type="Button" parent="CenterContainer/DialogPanel/VBox/ButtonRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_minimum_size = Vector2(140, 44)
+mouse_filter = 0
+theme_override_font_sizes/font_size = 16
+theme_override_colors/font_color = Color(0.08, 0.28, 0.18, 1)
+theme_override_styles/normal = SubResource("en_button_style")
+theme_override_styles/hover = SubResource("en_button_style")
+theme_override_styles/pressed = SubResource("en_button_style")
+theme_override_styles/focus = SubResource("en_button_style")
+text = "🔊 Listen (EN)"
+
+[node name="CloseButton" type="Button" parent="CenterContainer/DialogPanel/VBox/ButtonRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_minimum_size = Vector2(140, 44)
+mouse_filter = 0
+theme_override_font_sizes/font_size = 16
+text = "✖ Kapat"
