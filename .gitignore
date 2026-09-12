@@ -34,3 +34,6 @@ desktop.ini
 *.aab
 build/
 dist/
+
+# Godot AI köprüsü (geliştirme aracı; projeye ait değil, otomatik eklenir)
+/autoload/

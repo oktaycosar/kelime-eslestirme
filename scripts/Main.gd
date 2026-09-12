@@ -18,9 +18,10 @@ const CARD_SCENE: PackedScene = preload("res://scenes/Card.tscn")
 
 @onready var title_label: Label = $RootVBox/TitleLabel
 @onready var subtitle_label: Label = $RootVBox/SubtitleLabel
-@onready var turkish_cards_container: VBoxContainer = $RootVBox/GameArea/ColumnsHBox/TurkishColumn/TurkishCards
-@onready var english_cards_container: VBoxContainer = $RootVBox/GameArea/ColumnsHBox/EnglishColumn/EnglishCards
+@onready var turkish_cards_container: GridContainer = $RootVBox/GameArea/ColumnsHBox/TurkishColumn/TurkishCards
+@onready var english_cards_container: GridContainer = $RootVBox/GameArea/ColumnsHBox/EnglishColumn/EnglishCards
 @onready var connection_ribbon: Control = $RootVBox/GameArea/ConnectionRibbon
+@onready var game_area: Control = $RootVBox/GameArea
 @onready var game_over_panel = $GameOverPanel
 @onready var hint_button: Button = $RootVBox/ControlBar/HintButton
 @onready var pause_button: Button = $RootVBox/ControlBar/PauseButton
@@ -423,6 +424,8 @@ func _new_game() -> void:
 																# Mevcut kartları temizle
 																for c in cards:
 																																if is_instance_valid(c):
+																																																if c.get_parent() != null:
+																																																																c.get_parent().remove_child(c)
 																																																c.queue_free()
 																cards.clear()
 																GameManager.clear_cards()
@@ -511,6 +514,7 @@ func _new_game() -> void:
 
 																# Kategori butonlarını güncelle (oyun başladı -> disabled)
 																_update_category_buttons_disabled()
+																_apply_board_layout()
 
 
 # Karta tıklama
@@ -784,3 +788,60 @@ func _unhandled_input(event: InputEvent) -> void:
 # Debug print for test verification
 func _print_debug_init() -> void:
 																print("DEBUG Main._new_game tamamlandı, kart sayisi: ", cards.size())
+
+
+# ============================================================
+# Kart tahtasi yerlesimi (uyarlanabilir grid) - bkz. _apply_board_layout
+# ============================================================
+# Sorun: kartlar tek sutunda alt alta dizildiginde Kolay'da 6, Uzman'da 15
+# satir gerekiyor ve mevcut alana sigmiyordu. Kontrol min boyutuyla buyuyup
+# ortadan tasiyor, son satir ekran disinda kaliyordu (oyun kazanilamiyordu).
+# Cozum: kart sayisina VE o anki alana gore sutun/satir dagilimini hesapla.
+# Boylece hicbir kart ekran disina tasmaz; pencere yeniden boyutlandirilinca
+# yerlesim kendini gunceller (GameArea.resized -> _on_game_area_resized).
+
+const BOARD_SEPARATION := 6.0     # kartlar arasi bosluk (px)
+const BOARD_CELL_MIN_H := 52.0    # okunabilir en kucuk kart yuksekligi
+const BOARD_CELL_MIN_W := 88.0    # en kucuk kart genisligi
+const BOARD_COLUMNS_GAP := 16.0   # TR ve EN sutunlari arasi bosluk (ColumnsHBox)
+
+
+# GameArea yeniden boyutlandiginda yerlesimi tazele.
+func _on_game_area_resized() -> void:
+	_apply_board_layout()
+
+
+# TR ve EN sutunlari icin sutun sayisini ve kart hucre boyutunu hesaplayip uygular.
+func _apply_board_layout() -> void:
+	var pair_count: int = turkish_cards_container.get_child_count()
+	if pair_count <= 0:
+		return
+	var area: Vector2 = game_area.size
+	if area.x <= 0.0 or area.y <= 0.0:
+		return
+
+	var cols: int = _pick_board_columns(pair_count, area.y)
+	var rows: int = int(ceil(float(pair_count) / float(cols)))
+	var side_w: float = (area.x - BOARD_COLUMNS_GAP) * 0.5
+
+	# Hucre boyutu: mevcut alani satir/sutun sayisina bol (bosluklari duserek).
+	var cell_h: float = (area.y - float(rows - 1) * BOARD_SEPARATION) / float(rows)
+	var cell_w: float = (side_w - float(cols - 1) * BOARD_SEPARATION) / float(cols)
+	cell_h = maxf(cell_h, BOARD_CELL_MIN_H)
+	cell_w = maxf(cell_w, BOARD_CELL_MIN_W)
+
+	for container in [turkish_cards_container, english_cards_container]:
+		container.columns = cols
+		for card in container.get_children():
+			card.custom_minimum_size = Vector2(BOARD_CELL_MIN_W, cell_h)
+
+
+# `n` kart icin `avail_h` yuksekligine sigan EN AZ sutun sayisini dondurur.
+# En az sutun = en genis kartlar; bu yuzden 1'den baslayip sigan ilk degeri seciyoruz.
+func _pick_board_columns(n: int, avail_h: float) -> int:
+	for cols in range(1, n + 1):
+		var rows: int = int(ceil(float(n) / float(cols)))
+		var needed: float = float(rows) * BOARD_CELL_MIN_H + float(rows - 1) * BOARD_SEPARATION
+		if needed <= avail_h:
+			return cols
+	return n

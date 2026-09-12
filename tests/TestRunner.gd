@@ -386,11 +386,11 @@ func _test_main_scene_structure() -> void:
                 _assert_true(subtitle.text.find("English") >= 0, "Subtitle 'English' içeriyor")
 
         # TurkishCards container
-        var trc: VBoxContainer = inst.get_node_or_null("RootVBox/GameArea/ColumnsHBox/TurkishColumn/TurkishCards")
+        var trc: GridContainer = inst.get_node_or_null("RootVBox/GameArea/ColumnsHBox/TurkishColumn/TurkishCards")
         _assert_true(trc != null, "TurkishCards container mevcut")
 
         # EnglishCards container
-        var enc: VBoxContainer = inst.get_node_or_null("RootVBox/GameArea/ColumnsHBox/EnglishColumn/EnglishCards")
+        var enc: GridContainer = inst.get_node_or_null("RootVBox/GameArea/ColumnsHBox/EnglishColumn/EnglishCards")
         _assert_true(enc != null, "EnglishCards container mevcut")
 
         # TurkishHeaderPanel
@@ -462,8 +462,8 @@ func _test_connection_ribbon_class() -> void:
                 # Geçerli kartlarla: en az bir Türkçe ve bir İngilizce kart bul
                 var tr_card = null
                 var en_card = null
-                var trc: VBoxContainer = inst.get_node_or_null("RootVBox/GameArea/ColumnsHBox/TurkishColumn/TurkishCards")
-                var enc: VBoxContainer = inst.get_node_or_null("RootVBox/GameArea/ColumnsHBox/EnglishColumn/EnglishCards")
+                var trc: GridContainer = inst.get_node_or_null("RootVBox/GameArea/ColumnsHBox/TurkishColumn/TurkishCards")
+                var enc: GridContainer = inst.get_node_or_null("RootVBox/GameArea/ColumnsHBox/EnglishColumn/EnglishCards")
                 if trc != null and trc.get_child_count() > 0:
                         tr_card = trc.get_child(0)
                 if enc != null and enc.get_child_count() > 0:
@@ -511,8 +511,8 @@ func _test_main_card_split() -> void:
                 inst._initialize_first_game()
         await get_tree().process_frame
 
-        var trc: VBoxContainer = inst.get_node_or_null("RootVBox/GameArea/ColumnsHBox/TurkishColumn/TurkishCards")
-        var enc: VBoxContainer = inst.get_node_or_null("RootVBox/GameArea/ColumnsHBox/EnglishColumn/EnglishCards")
+        var trc: GridContainer = inst.get_node_or_null("RootVBox/GameArea/ColumnsHBox/TurkishColumn/TurkishCards")
+        var enc: GridContainer = inst.get_node_or_null("RootVBox/GameArea/ColumnsHBox/EnglishColumn/EnglishCards")
         _assert_true(trc != null and enc != null, "İki sütun konteyner mevcut")
         if trc != null and enc != null:
                 # Tüm Türkçe kartlar Türkçe dilinde
@@ -769,8 +769,8 @@ func _test_main_wrong_side_behavior() -> void:
                 inst._initialize_first_game()
         await get_tree().process_frame
 
-        var trc: VBoxContainer = inst.get_node_or_null("RootVBox/GameArea/ColumnsHBox/TurkishColumn/TurkishCards")
-        var enc: VBoxContainer = inst.get_node_or_null("RootVBox/GameArea/ColumnsHBox/EnglishColumn/EnglishCards")
+        var trc: GridContainer = inst.get_node_or_null("RootVBox/GameArea/ColumnsHBox/TurkishColumn/TurkishCards")
+        var enc: GridContainer = inst.get_node_or_null("RootVBox/GameArea/ColumnsHBox/EnglishColumn/EnglishCards")
         _assert_true(trc != null and enc != null, "Sutunlar mevcut")
 
         if trc != null and enc != null and trc.get_child_count() > 0 and enc.get_child_count() > 0:
@@ -1151,8 +1151,8 @@ func _test_main_matched_card_opens_word_card() -> void:
                 GameManager.matched_card_clicked.connect(_on_test_matched_card_clicked)
 
         # Bir Türkçe + bir İngilizce kart eşleştir (pair_id'leri aynı olan)
-        var trc: VBoxContainer = inst.get_node_or_null("RootVBox/GameArea/ColumnsHBox/TurkishColumn/TurkishCards")
-        var enc: VBoxContainer = inst.get_node_or_null("RootVBox/GameArea/ColumnsHBox/EnglishColumn/EnglishCards")
+        var trc: GridContainer = inst.get_node_or_null("RootVBox/GameArea/ColumnsHBox/TurkishColumn/TurkishCards")
+        var enc: GridContainer = inst.get_node_or_null("RootVBox/GameArea/ColumnsHBox/EnglishColumn/EnglishCards")
         if trc != null and enc != null and trc.get_child_count() > 0 and enc.get_child_count() > 0:
                 var tr_card = trc.get_child(0)
                 var tr_pid: int = tr_card.pair_id
