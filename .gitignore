@@ -35,5 +35,8 @@ desktop.ini
 build/
 dist/
 
-# Godot AI köprüsü (geliştirme aracı; projeye ait değil, otomatik eklenir)
+# Godot AI bridge (dev tool, not part of the game; auto-added)
 /autoload/
+
+# Exported game (build artifact)
+/build/
