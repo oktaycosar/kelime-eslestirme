@@ -1,5 +1,17 @@
 # 🎯 Türkçe → İngilizce Memory (Godot 4)
 
+## ▶️ Tarayıcıda Oyna
+
+Kurulum gerekmez, doğrudan oynayabilirsiniz:
+
+**https://oktaycosar.github.io/kelime-eslestirme/**
+
+İlk açılışta ~38 MB indirilir (ilerleme çubuğu görünür), sonra oyun başlar.
+Masaüstü `.exe` sürümüyle tek farkı: tarayıcıda konuşma sentezi (TTS)
+olmadığı için **Sesli Mod sessiz kalır**. Diğer her şey aynıdır.
+
+> Web sürümü `gh-pages` dalında yayınlanır; `main` dalı yalnızca kaynak kodu içerir.
+
 Klasik memory oyununun biraz farklı bir versiyonu: bu oyunda aynı görsele sahip iki kartı bulmazsınız. Bir **Türkçe** kelimenin **İngilizce** karşılığını bulduğunuzda çift tamamlanır.
 
 ```
