@@ -24,6 +24,9 @@ const CATEGORY_FONT_SIZE := 13
 # Oyun modu cubugu (Mod: Klasik / TR-EN / ...) - kategori cubugundan bagimsiz
 const MODE_BUTTON_SIZE := Vector2(170, 38)
 const MODE_FONT_SIZE := 15
+# Zorluk cubugu (Zorluk: Kolay / Orta / Zor / Uzman)
+const DIFFICULTY_BUTTON_SIZE := Vector2(118, 34)
+const DIFFICULTY_FONT_SIZE := 14
 
 @onready var title_label: Label = $RootVBox/TitleLabel
 @onready var subtitle_label: Label = $RootVBox/SubtitleLabel
@@ -31,6 +34,7 @@ const MODE_FONT_SIZE := 15
 @onready var english_cards_container: GridContainer = $RootVBox/GameArea/ColumnsHBox/EnglishColumn/EnglishCards
 @onready var connection_ribbon: Control = $RootVBox/GameArea/ConnectionRibbon
 @onready var game_area: Control = $RootVBox/GameArea
+@onready var difficulty_flow: HFlowContainer = $RootVBox/DifficultyBar/DifficultyFlow
 @onready var game_over_panel = $GameOverPanel
 @onready var hint_button: Button = $RootVBox/ControlBar/HintButton
 @onready var pause_button: Button = $RootVBox/ControlBar/PauseButton
@@ -69,6 +73,9 @@ var _mode_style_disabled: StyleBoxFlat = null
 
 # Oyun modu butonu referansları: { GameMode (int) -> Button }
 var mode_buttons: Dictionary = {}
+
+# Zorluk butonu referanslari: { Difficulty (int) -> Button }
+var difficulty_buttons: Dictionary = {}
 
 # Yeni oyun başlatılırken kategori değişikliği kaynaklı mı?
 # (avoid infinite recursion: category change -> new_game -> ... )
@@ -146,6 +153,8 @@ func _initialize_first_game() -> void:
 																_apply_category_button_states()
 																_build_mode_buttons()
 																_apply_mode_button_states()
+																_build_difficulty_buttons()
+																_apply_difficulty_button_states()
 																_new_game()
 																print("DEBUG done, name=", name, " id=", get_instance_id(), " cards=", cards.size())
 
@@ -812,6 +821,7 @@ func _print_debug_init() -> void:
 const BOARD_SEPARATION := 6.0     # kartlar arasi bosluk (px)
 const BOARD_CELL_MIN_H := 52.0    # okunabilir en kucuk kart yuksekligi
 const BOARD_CELL_MIN_W := 88.0    # en kucuk kart genisligi
+const BOARD_CELL_MAX_H := 112.0   # asiri buyumesin (az kartli zorluklarda)
 const BOARD_COLUMNS_GAP := 16.0   # TR ve EN sutunlari arasi bosluk (ColumnsHBox)
 
 
@@ -836,7 +846,7 @@ func _apply_board_layout() -> void:
 	# Hucre boyutu: mevcut alani satir/sutun sayisina bol (bosluklari duserek).
 	var cell_h: float = (area.y - float(rows - 1) * BOARD_SEPARATION) / float(rows)
 	var cell_w: float = (side_w - float(cols - 1) * BOARD_SEPARATION) / float(cols)
-	cell_h = maxf(cell_h, BOARD_CELL_MIN_H)
+	cell_h = clampf(cell_h, BOARD_CELL_MIN_H, BOARD_CELL_MAX_H)
 	cell_w = maxf(cell_w, BOARD_CELL_MIN_W)
 
 	for container in [turkish_cards_container, english_cards_container]:
@@ -854,3 +864,58 @@ func _pick_board_columns(n: int, avail_h: float) -> int:
 		if needed <= avail_h:
 			return cols
 	return n
+
+
+# ============================================================
+# Zorluk secici (Zorluk: Kolay / Orta / Zor / Uzman)
+# ============================================================
+# DifficultyManager dort zorluk destekliyordu ve testleri vardi ama arayuzde
+# secici yoktu; oyuncu hep Kolay oynuyordu. Butonlar DifficultyManager uzerinden
+# OTOMATIK uretilir -- yeni zorluk eklemek icin yalnizca DifficultyManager.gd
+# guncellenir, Main.gd'ye dokunulmaz.
+
+func _build_difficulty_buttons() -> void:
+	if difficulty_flow == null:
+		push_warning("Main.gd: DifficultyFlow node bulunamadi - zorluk butonlari olusturulamadi.")
+		return
+	# Idempotent guard (TestRunner ikinci cagri guvenligi)
+	if difficulty_buttons.size() > 0:
+		return
+	for d in DifficultyManager.Difficulty.values():
+		var btn: Button = Button.new()
+		btn.name = "Diff_%d" % d
+		btn.text = "%s (%d)" % [
+			DifficultyManager.get_difficulty_label_pretty(d),
+			DifficultyManager.get_pair_count(d),
+		]
+		btn.toggle_mode = false
+		btn.custom_minimum_size = DIFFICULTY_BUTTON_SIZE
+		btn.add_theme_font_size_override("font_size", DIFFICULTY_FONT_SIZE)
+		btn.mouse_filter = Control.MOUSE_FILTER_STOP
+		btn.tooltip_text = "%s: %d cift, %d ipucu hakki" % [
+			DifficultyManager.get_difficulty_label_pretty(d),
+			DifficultyManager.get_pair_count(d),
+			DifficultyManager.get_hint_count(d),
+		]
+		btn.set_meta("difficulty", d)
+		# Mod butonlariyla ayni gorsel dil (amber outline / amber dolu)
+		_apply_mode_button_style(btn, false)
+		btn.pressed.connect(_on_difficulty_button_pressed.bind(d))
+		difficulty_flow.add_child(btn)
+		difficulty_buttons[d] = btn
+
+
+# Aktif zorluga gore butonlarin gorsel durumunu senkronize et (tiklama olmadan).
+func _apply_difficulty_button_states() -> void:
+	var active: int = DifficultyManager.current_difficulty
+	for d in difficulty_buttons.keys():
+		_apply_mode_button_style(difficulty_buttons[d], d == active)
+
+
+# Zorluk butonuna basildi: zorlugu degistir, butonlari guncelle, yeni oyun kur.
+func _on_difficulty_button_pressed(difficulty: int) -> void:
+	if DifficultyManager.current_difficulty == difficulty:
+		return
+	DifficultyManager.set_difficulty(difficulty)
+	_apply_difficulty_button_states()
+	_new_game()
