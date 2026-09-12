@@ -129,11 +129,22 @@ func _load_all_streams() -> void:
         if resume_stream:
                 _resume_player.stream = resume_stream
 
+        # Kac ses yuklendi? Proje kasten sessi teslim edilmis olabilir; o durumda her
+        # dosya icin ayri uyari basmak yanlis alarmdir (acilista 7 satir gurultu).
+        # Tek bilgi satiri yeterli; yalnizca KISMI yukleme gercek tutarsizliktir.
+        var loaded_count := 0
+        for _s in [flip_stream, match_stream, wrong_stream, win_stream, hint_stream, pause_stream, resume_stream]:
+                if _s != null:
+                        loaded_count += 1
+        if loaded_count == 0:
+                print("AudioManager: ses dosyasi yok (assets/sounds/) - oyun sessiz calisir.")
+        elif loaded_count < 7:
+                push_warning("AudioManager: %d/7 ses dosyasi eksik (assets/sounds/)" % (7 - loaded_count))
+
 
 # Bir yolu güvenli yükler; AudioStream değilse veya yoksa null döner.
 func _safe_load_stream(path: String) -> AudioStream:
         if not ResourceLoader.exists(path):
-                push_warning("AudioManager: Ses dosyası bulunamadı (sessizce atlandı): %s" % path)
                 return null
         var res = load(path)
         if res == null:
