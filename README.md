@@ -28,13 +28,15 @@ APPLE (İngilizce)+ HOUSE (İngilizce) =  İKİNCİ KART AÇILMAZ (geçersiz ham
 - [Kart Görselini Değiştirme](#-kart-görselini-değiştirme)
 - [Hızlı Sorun Giderme](#-hızlı-sorun-giderme)
 - [Windows Path Eşleştirme](#-windows-path-eşleştirme)
+- [Testler (headless)](#-testler-headless)
+- [Windows .exe derleme](#-windows-exe-derleme)
 - [Test Senaryoları](#-test-senaryoları)
 
 ---
 
 ## 🎮 Oyun Kuralları
 
-1. Oyun başında **12 kart (6 çift)** rastgele karıştırılır ve 4 sütun × 3 satır grid'de dizilir (Kolay mod varsayılan). Seçili kategori varsa yalnızca o kategorilerden seçilir; her kategori 15 çift olduğundan (Task 18) çoğu zorluk tek kategori ile tamamlanır.
+1. Oyun başında seçili zorluğa göre **6/8/10/15 çift** rastgele karıştırılır ve iki sütuna (sol TR, sağ EN) dizilir. Yerleşim sabit değildir: sütun sayısı ve kart boyutu, kart sayısına ve ekranda kalan alana göre `Main._apply_board_layout()` tarafından hesaplanır — böylece hiçbir kart ekran dışına taşmaz. Seçili kategori varsa yalnızca o kategorilerden seçilir.
 2. Tıkla → kart açılır, kelime görünür.
 3. İlk karttan sonra:
    - **Aynı dilde** bir kart seçersen (örn. ELMA → KİTAP): ikinci kart **AÇILMAZ**, hamle geçersiz sayılır. Skor azalmaz.
@@ -773,24 +775,33 @@ Otomatik kullanım: oyun her açılışta `get_random_pairs(total_pairs, selecte
 Aç: `scripts/DifficultyManager.gd`
 
 ```gdscript
-enum Difficulty { EASY, MEDIUM, HARD }
+enum Difficulty { EASY, MEDIUM, HARD, EXPERT }
 
-# Kolay : 6 çift = 12 kart, 4x3 grid, 3 ipucu, -50 penalty (varsayılan, AÇIK)
-# Orta  : 8 çift = 16 kart, 4x4 grid, 2 ipucu, -75 penalty (kod hazır, UI pasif)
-# Zor   : 10 çift= 20 kart, 5x4 grid, 1 ipucu, -100 penalty (kod hazır, UI pasif)
+# Kolay : 6 çift = 12 kart, 3 ipucu, -50 penalty (varsayılan)
+# Orta  : 8 çift = 16 kart, 2 ipucu, -75 penalty
+# Zor   : 10 çift = 20 kart, 1 ipucu, -100 penalty
+# Uzman : 15 çift = 30 kart, 1 ipucu, -150 penalty
 ```
 
-### Orta/Zor modunu açmak için (ileride genişletme)
-1. `Main.tscn` içine zorluk seçme butonları ekle (Kolay/Orta/Zor).
-2. Butonun `pressed` sinyalinde:
-   ```gdscript
-   DifficultyManager.set_difficulty(DifficultyManager.Difficulty.MEDIUM)
-   _new_game()  # yeniden başlat
-   ```
-3. `GameManager.start_game()` otomatik olarak `DifficultyManager.current_difficulty`'den çift sayısını ve ipucu hakkını alır.
-4. `GridContainer.columns` da `DifficultyManager.get_grid_columns()` ile güncellenir.
+### Zorluk seçimi (arayüzde)
+Zorluk, `Main.tscn` → `RootVBox/DifficultyBar/DifficultyFlow` içindeki butonlarla seçilir:
+**Kolay (6) / Orta (8) / Zor (10) / Uzman (15)**. Butonlar `DifficultyManager.Difficulty`
+üzerinden **otomatik** üretilir — yeni zorluk eklemek için yalnızca `DifficultyManager.gd`
+güncellenir, `Main.gd`'ye dokunulmaz. Aktif zorluk amber dolgulu görünür.
 
-Kartlar grid'de genişleyebildiği için Orta (4×4) ve Zor (5×4) modları da pencere içinde sorunsuz sığar.
+Butona basıldığında `Main._on_difficulty_button_pressed()` → `DifficultyManager.set_difficulty()`
+→ `_new_game()`. `GameManager.start_game()` çift sayısını ve ipucu hakkını
+`DifficultyManager.current_difficulty`'den alır.
+
+### Kart yerleşimi
+Sütun sayısı ve kart yüksekliği sabit değildir; `Main._apply_board_layout()` hesaplar:
+- Sütun sayısı: kartların okunabilir en küçük yüksekliğe (52px) sığdığı **en az** sütun sayısı
+  (`_pick_board_columns()`), yani kartlar mümkün olduğunca geniş kalır.
+- Kart yüksekliği: kalan alanın satır sayısına bölümü; 52px alt sınır, 112px üst sınır.
+- `GameArea.resized` sinyali bağlıdır: pencere yeniden boyutlandırılınca yerleşim tazelenir.
+
+Ölçülen sonuç (1152×720): Kolay 2 sütun 269×99 · Orta 2 sütun 269×73 · Zor 2 sütun 269×57 ·
+Uzman 3 sütun 177×57. Dördü de pencere içinde kalır; bu `tests/check_layout.gd` ile korunur.
 
 ---
 
@@ -816,7 +827,7 @@ Aç: `scenes/Card.tscn`
 - `BackLabel` node'unda `?` yerine farklı bir karakter (örn `🃏`, `🂠`, `📖`) veya gerçek bir Texture kullan.
 
 ### Kart boyutu
-- `Card (TextureButton)` seç → `custom_minimum_size = Vector2(200, 170)` değerini değiştir.
+- `Card (TextureButton)` varsayılan `custom_minimum_size = Vector2(180, 70)`. DİKKAT: çalışma anında `Main._apply_board_layout()` kart yüksekliğini ezer. Kalıcı değişiklik için `Main.gd` içindeki `BOARD_CELL_MIN_H` / `BOARD_CELL_MAX_H` / `BOARD_CELL_MIN_W` sabitlerini ayarla.
 - Grid ile aralıklar: `scenes/Main.tscn` → `GridContainer` → `theme_override_constants/h_separation`, `v_separation`.
 
 ### Gerçek resim kullanmak istersen
@@ -836,7 +847,7 @@ Aç: `scenes/Card.tscn`
 | **En iyi skor kaydedilmiyor** | `SaveManager` autoload `project.godot`'da kayıtlı olmalı. Kayıt dosyası `user://memory_best_save.json`'da. Hata varsa `push_warning` ile loglanır. |
 | **Türkçe karakterler görünmüyor** | Godot 4 varsayılan fontu Türkçe'yi destekler. Eğer özel font kullanırsan, Türkçe karakter içeren bir font seç. |
 | **Oyun paneli görünmüyor** | `Main.tscn`'de `GameOverPanel`'in `visible = false` başlangıçta olmalı. `Main.gd` `_new_game()` `hide_panel()` çağırır. |
-| **Kartlar grid'de taşıyor** | `Card.tscn` `custom_minimum_size`'ı küçült ya da `Main.tscn` `GridContainer` `h_separation/v_separation` azalt. |
+| **Kartlar ekrana sığmıyor** | Yerleşim `Main._apply_board_layout()` ile hesaplanır; elle boyut verme. `BOARD_CELL_MIN_H` düşür ya da `tests/check_layout.gd` çıktısına bak — hangi zorlukta taşıyor gösterir. |
 | **Otomatik içe aktarım sırasında hata** | `.godot/` klasörünü silip Godot Editor'de projeyi yeniden import et. |
 | **Klavye kısayolları çalışmıyor** | `Main.gd`'nin `_unhandled_input` metodunu kontrol et. Butona focus varken Tab/Enter gibi tuşlar buton tarafından yakalanır; R/H/P/M yine de çalışır. |
 | **Kategori butonları yanıt vermiyor** | Oyun aktifken (is_running && !is_game_won) butonlar disabled. Oyunu kazanınca veya başlatmadan önce kategori değiştirilebilir. |
@@ -948,6 +959,48 @@ Aşağıdaki senaryoları manuel test edebilirsin:
 
 ---
 
+## 🧪 Testler (headless)
+
+Üç test betiği var; üçü de Godot'u headless çalıştırır ve **exit code** döndürür (0 = geçti):
+
+```bash
+GODOT=/path/to/godot            # örn. C:\Godot\Godot_v4.7.1-stable_win64.exe
+P="res://"                      # proje kökü
+
+# 1) Ana test paketi (426 iddia): oyun mantığı, veri, sinyaller, paneller
+"$GODOT" --headless --path . --script res://tests/run_tests.gd
+
+# 2) Yerleşim testi: 4 zorlukta TÜM kartların pencere içinde kaldığını ÖLÇER
+"$GODOT" --headless --path . --script res://tests/check_layout.gd
+
+# 3) Zorluk seçici testi: butonlar var mı, basınca oyun güncelleniyor mu
+"$GODOT" --headless --path . --script res://tests/check_difficulty_ui.gd
+```
+
+Neden ayrı betikler: `TestRunner.gd` autoload olarak tasarlanmıştır, bu yüzden
+`run_tests.gd` onu root'a ekleyen bir sarmalayıcıdır; diğer ikisi bağımsız
+`SceneTree` betikleridir.
+
+> **Ders:** Bu projede 426 test yeşilken oyun kazanılamıyordu (kartlar ekran
+> dışındaydı) — çünkü hiçbir test "kartlar gerçekten görünüyor mu" diye
+> bakmıyordu. Yeni özellik eklerken yalnızca mantığı değil, **kullanıcının
+> göreceğini** de doğrulayan bir iddia ekle.
+
+## 📦 Windows .exe derleme
+
+```bash
+"$GODOT" --headless --path . --export-release "Windows" build/KelimeEslestirme.exe
+```
+
+- Preset: `export_presets.cfg` → **Windows** (x86_64, release,
+  `binary_format/embed_pck=true` → tek dosya çıktı, ayrı `.pck` yok).
+- `exclude_filter="tests/*,autoload/*"` → testler ve Godot AI köprüsü oyuna girmez.
+- `build/` klasörünü önce oluştur (Godot oluşturmaz, yoksa
+  "The given export path doesn't exist" hatası verir).
+- Çıktı ~104 MB'tır; Windows export şablonlarının kurulu olması gerekir
+  (Editor → Manage Export Templates).
+
+---
 ## 📜 Lisans
 
 Bu proje kişisel/akademik kullanım için açık kaynak olarak hazırlanmıştır. Ses dosyaları için ilgili kaynakların lisanslarına uyunuz.
