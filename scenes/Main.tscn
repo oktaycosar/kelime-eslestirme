@@ -1,10 +1,11 @@
-[gd_scene load_steps=9 format=3 uid="uid://bmain01xyz"]
+[gd_scene load_steps=11 format=3 uid="uid://bmain01xyz"]
 
 [ext_resource type="Script" path="res://scripts/Main.gd" id="1_main_script"]
 [ext_resource type="Script" path="res://scripts/UIManager.gd" id="2_ui_script"]
 [ext_resource type="Script" path="res://scripts/ConnectionRibbon.gd" id="3_ribbon_script"]
 [ext_resource type="PackedScene" path="res://scenes/GameOverPanel.tscn" id="4_gop_scene"]
 [ext_resource type="PackedScene" path="res://scenes/WordCardPanel.tscn" id="5_wcp_scene"]
+[ext_resource type="Script" path="res://scripts/TitleLogo.gd" id="6_title_logo"]
 
 [sub_resource type="StyleBoxFlat" id="header_style"]
 bg_color = Color(0.18, 0.24, 0.34, 1)
@@ -62,6 +63,15 @@ border_width_right = 4
 border_width_bottom = 4
 border_color = Color(0.95, 0.85, 0.4, 1)
 
+[sub_resource type="StyleBoxFlat" id="center_divider_style"]
+bg_color = Color(0.42, 0.67, 0.92, 0.42)
+corner_radius_top_left = 1
+corner_radius_top_right = 1
+corner_radius_bottom_right = 1
+corner_radius_bottom_left = 1
+shadow_color = Color(0.2, 0.52, 0.9, 0.18)
+shadow_size = 3
+
 [node name="Main" type="Control"]
 layout_mode = 3
 anchors_preset = 15
@@ -94,7 +104,18 @@ grow_vertical = 2
 theme_override_constants/separation = 8
 mouse_filter = 2
 
+[node name="TitleLogo" type="HBoxContainer" parent="RootVBox"]
+custom_minimum_size = Vector2(0, 43)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 0
+theme_override_constants/separation = 4
+alignment = 1
+mouse_filter = 2
+script = ExtResource("6_title_logo")
+
 [node name="TitleLabel" type="Label" parent="RootVBox"]
+visible = false
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 0
@@ -111,7 +132,7 @@ size_flags_vertical = 0
 mouse_filter = 2
 theme_override_font_sizes/font_size = 14
 theme_override_colors/font_color = Color(0.85, 0.85, 0.92, 1)
-text = "🇹🇷 Türkçe → 🇬🇧 English • Soldan seç, sağdan eşleştir"
+text = "TR Türkçe ↔ EN İngilizce • Soldan veya sağdan seç, karşı tarafta eşleştir"
 horizontal_alignment = 1
 vertical_alignment = 1
 
@@ -241,6 +262,7 @@ alignment = 1
 mouse_filter = 2
 
 [node name="CategoryTitle" type="Label" parent="RootVBox/CategoryBar"]
+visible = false
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 1
@@ -251,12 +273,22 @@ text = "Kategoriler:"
 vertical_alignment = 1
 
 [node name="CategoryFlow" type="HFlowContainer" parent="RootVBox/CategoryBar"]
+visible = false
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 1
 theme_override_constants/h_separation = 8
 theme_override_constants/v_separation = 8
 mouse_filter = 2
+
+[node name="CategoryMenu" type="MenuButton" parent="RootVBox/CategoryBar"]
+custom_minimum_size = Vector2(280, 38)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 0
+mouse_filter = 0
+theme_override_font_sizes/font_size = 16
+text = "🎲 Kategori: Karışık  ▼"
 
 [node name="DifficultyBar" type="HBoxContainer" parent="RootVBox"]
 layout_mode = 2
@@ -345,7 +377,7 @@ grow_vertical = 2
 mouse_filter = 2
 theme_override_font_sizes/font_size = 20
 theme_override_colors/font_color = Color(0.35, 0.22, 0.05, 1)
-text = "🇹🇷 TÜRKÇE"
+text = "TR TÜRKÇE"
 horizontal_alignment = 1
 vertical_alignment = 1
 
@@ -367,7 +399,7 @@ grow_vertical = 2
 mouse_filter = 2
 theme_override_font_sizes/font_size = 20
 theme_override_colors/font_color = Color(0.08, 0.28, 0.18, 1)
-text = "🇬🇧 İNGİLİZCE"
+text = "EN İNGİLİZCE"
 horizontal_alignment = 1
 vertical_alignment = 1
 
@@ -376,6 +408,74 @@ layout_mode = 3
 size_flags_horizontal = 3
 size_flags_vertical = 3
 mouse_filter = 2
+
+[node name="CenterDivider" type="Panel" parent="RootVBox/GameArea"]
+layout_mode = 1
+anchors_preset = 6
+anchor_left = 0.5
+anchor_top = 0.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -1.0
+offset_top = 5.0
+offset_right = 1.0
+offset_bottom = -5.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("center_divider_style")
+
+[node name="TopDiamond" type="Label" parent="RootVBox/GameArea/CenterDivider"]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = -8.0
+offset_top = 22.0
+offset_right = 8.0
+offset_bottom = 40.0
+grow_horizontal = 2
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.55, 0.78, 1, 0.72)
+theme_override_font_sizes/font_size = 10
+text = "◆"
+horizontal_alignment = 1
+
+[node name="MiddleDiamond" type="Label" parent="RootVBox/GameArea/CenterDivider"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -8.0
+offset_top = -9.0
+offset_right = 8.0
+offset_bottom = 9.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.55, 0.78, 1, 0.82)
+theme_override_font_sizes/font_size = 10
+text = "◆"
+horizontal_alignment = 1
+
+[node name="BottomDiamond" type="Label" parent="RootVBox/GameArea/CenterDivider"]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -8.0
+offset_top = -40.0
+offset_right = 8.0
+offset_bottom = -22.0
+grow_horizontal = 2
+grow_vertical = 0
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.55, 0.78, 1, 0.72)
+theme_override_font_sizes/font_size = 10
+text = "◆"
+horizontal_alignment = 1
 
 [node name="ColumnsHBox" type="HBoxContainer" parent="RootVBox/GameArea"]
 layout_mode = 1
@@ -469,7 +569,7 @@ mouse_filter = 2
 
 [node name="DialogPanel" type="Panel" parent="PauseOverlay/CenterContainer"]
 layout_mode = 2
-custom_minimum_size = Vector2(420, 300)
+custom_minimum_size = Vector2(420, 320)
 size_flags_horizontal = 4
 size_flags_vertical = 4
 mouse_filter = 2
@@ -507,6 +607,15 @@ custom_minimum_size = Vector2(220, 56)
 mouse_filter = 0
 theme_override_font_sizes/font_size = 24
 text = "Devam et ▶"
+
+[node name="RestartButton" type="Button" parent="PauseOverlay/CenterContainer/DialogPanel/VBox"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 3
+custom_minimum_size = Vector2(220, 56)
+mouse_filter = 0
+theme_override_font_sizes/font_size = 24
+text = "Yeniden Başla ↻"
 
 [node name="QuitButton" type="Button" parent="PauseOverlay/CenterContainer/DialogPanel/VBox"]
 layout_mode = 2

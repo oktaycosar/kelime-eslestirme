@@ -1,0 +1,21 @@
+SES EFEKTLERİ — LİSANS
+
+Bu klasördeki .wav dosyalarının TAMAMI bu projede, kod ile sentezlenerek
+üretilmiştir: tools/generate_sfx.gd
+
+- Dışarıdan indirilmiş hiçbir ses örneği (sample) YOKTUR.
+- Üçüncü taraf telif hakkı, atıf zorunluluğu veya lisans ücreti YOKTUR.
+- Dosyalar tamamen bu projeye aittir; ticari kullanım dahil serbestçe
+  kullanılabilir, değiştirilebilir ve dağıtılabilir.
+
+Yeniden üretmek için (sesleri değiştirmek istersen):
+  godot --headless --path <proje> --script res://tools/generate_sfx.gd
+
+Dosyalar:
+  flip.wav    Kart açılma  (kısa yumuşak tık)
+  match.wav   Eşleşme      (yükselen iki notalı çıngırak)
+  wrong.wav   Yanlış eşleşme (alçalan yumuşak vınlama)
+  win.wav     Oyun kazanma (C-E-G-C arpej)
+  hint.wav    İpucu         (kısa ışıltı)
+  pause.wav   Duraklat      (alçalan ikili)
+  resume.wav  Devam et      (yükselen ikili)

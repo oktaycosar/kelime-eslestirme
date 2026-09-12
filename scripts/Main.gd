@@ -6,7 +6,7 @@
 #   - Kart tıklamalarını GameManager'a yönlendir
 #   - İpucu / Duraklat / Sesi Kapat butonları
 #   - Kategori butonları (multi-select, toggle)
-#   - Oyun modu butonları (4 mod: Klasik / TR→EN / EN→TR / Sesli)
+#   - Oyun modu butonları (sadeleştirilmiş: Klasik / Sesli)
 #   - Klavye kısayolları (R / H / P / M / ESC)
 #   - Eşleşme → ConnectionRibbon'a kart pozisyonları geçir
 #   - Oyun sonu panelini göster (SaveManager ile rekor kontrolü)
@@ -42,7 +42,9 @@ const DIFFICULTY_FONT_SIZE := 14
 @onready var pause_overlay: Control = $PauseOverlay
 @onready var resume_button: Button = $PauseOverlay/CenterContainer/DialogPanel/VBox/ResumeButton
 @onready var quit_button: Button = $PauseOverlay/CenterContainer/DialogPanel/VBox/QuitButton
+@onready var restart_button: Button = $PauseOverlay/CenterContainer/DialogPanel/VBox/RestartButton
 @onready var category_flow: HFlowContainer = $RootVBox/CategoryBar/CategoryFlow
+@onready var category_menu: MenuButton = $RootVBox/CategoryBar/CategoryMenu
 # Oyun modu butonları için container (Web Task 12 paritesi)
 @onready var game_mode_flow: HFlowContainer = $RootVBox/GameModeBar/GameModeFlow
 # Yanlış yön mesajı label'ı (geçici toast benzeri)
@@ -58,6 +60,7 @@ var category_buttons: Dictionary = {}
 
 # "Tümünü göster" temizleme butonu
 var clear_categories_button: Button = null
+var _category_menu_ids: Dictionary = {}
 
 # Kategori butonu görsel durumları (StyleBoxFlat)
 var _cat_style_normal: StyleBoxFlat = null
@@ -94,6 +97,8 @@ func _ready() -> void:
 																# GameOverPanel'in replay sinyalini dinle
 																if game_over_panel and not game_over_panel.replay_pressed.is_connected(_on_replay):
 																																game_over_panel.replay_pressed.connect(_on_replay)
+																if game_over_panel and not game_over_panel.quit_requested.is_connected(_on_quit_button_pressed):
+																																game_over_panel.quit_requested.connect(_on_quit_button_pressed)
 
 																# game_won sinyalini dinle
 																if not GameManager.game_won.is_connected(_on_game_won):
@@ -114,6 +119,8 @@ func _ready() -> void:
 																																resume_button.pressed.connect(_on_resume_button_pressed)
 																if quit_button and not quit_button.pressed.is_connected(_on_quit_button_pressed):
 																																quit_button.pressed.connect(_on_quit_button_pressed)
+																if restart_button and not restart_button.pressed.is_connected(_on_pause_restart_pressed):
+																																restart_button.pressed.connect(_on_pause_restart_pressed)
 
 																# GameManager sinyallerini dinle
 																if not GameManager.hints_changed.is_connected(_on_hints_changed):
@@ -153,6 +160,7 @@ func _initialize_first_game() -> void:
 																																return
 																print("DEBUG running, name=", name, " id=", get_instance_id(), " trc=", turkish_cards_container, " enc=", english_cards_container)
 																_build_category_buttons()
+																_build_category_menu()
 																_apply_category_button_states()
 																_build_mode_buttons()
 																_apply_mode_button_states()
@@ -206,6 +214,61 @@ func _build_category_buttons() -> void:
 																																btn.toggled.connect(_on_category_toggled.bind(cat["id"]))
 																																category_flow.add_child(btn)
 																																category_buttons[cat["id"]] = btn
+
+
+# Kategorileri tek bir açılır menüde gösterir. Eski butonlar geriye dönük
+# test/uyumluluk için gizli tutulur; kullanıcı yalnızca bu kompakt seçiciyi görür.
+func _build_category_menu() -> void:
+	if category_menu == null:
+		return
+	var popup: PopupMenu = category_menu.get_popup()
+	if popup.item_count > 0:
+		return
+	popup.hide_on_checkable_item_selection = false
+	popup.add_item("🎲 Karışık", 0)
+	popup.add_separator()
+	var item_id := 1
+	for cat in WordData.CATEGORIES:
+		popup.add_check_item("%s %s" % [cat["emoji"], cat["label"]], item_id)
+		_category_menu_ids[item_id] = cat["id"]
+		item_id += 1
+	popup.id_pressed.connect(_on_category_menu_pressed)
+	_apply_category_menu_state()
+
+
+func _on_category_menu_pressed(item_id: int) -> void:
+	if item_id == 0:
+		GameManager.clear_categories()
+		category_menu.get_popup().hide()
+		return
+	var category_id: String = _category_menu_ids.get(item_id, "")
+	if category_id.is_empty():
+		return
+	var new_categories: Array = GameManager.selected_categories.duplicate()
+	if new_categories.has(category_id):
+		new_categories.erase(category_id)
+	else:
+		new_categories.append(category_id)
+	GameManager.set_categories(new_categories)
+
+
+func _apply_category_menu_state() -> void:
+	if category_menu == null:
+		return
+	var popup: PopupMenu = category_menu.get_popup()
+	for item_id in _category_menu_ids.keys():
+		var index := popup.get_item_index(item_id)
+		if index >= 0:
+			popup.set_item_checked(index, GameManager.selected_categories.has(_category_menu_ids[item_id]))
+	var selected_count := GameManager.selected_categories.size()
+	if selected_count == 0:
+		category_menu.text = "🎲 Kategori: Karışık  ▼"
+	elif selected_count == 1:
+		var selected_id: String = GameManager.selected_categories[0]
+		var info: Dictionary = WordData.get_category_info(selected_id)
+		category_menu.text = "%s Kategori: %s  ▼" % [info.get("emoji", ""), info.get("label", selected_id)]
+	else:
+		category_menu.text = "✓ Kategori: %d seçim  ▼" % selected_count
 
 
 # StyleBoxFlat kaynaklarını hazırla (kategori butonları için).
@@ -303,18 +366,22 @@ func _update_category_buttons_disabled() -> void:
 																																																btn.disabled = disabled
 																if clear_categories_button != null:
 																																# "Tümünü Göster" butonu da oyun sırasında disabled
-																																clear_categories_button.disabled = disabled
+																								clear_categories_button.disabled = disabled
+																if category_menu != null:
+																								# Kompakt seçici her turda kullanılabilir; seçim yeni oyunu başlatır.
+																								category_menu.disabled = GameManager.busy or GameManager.is_paused
 
 
 # ============================================================
-# OYUN MODU BUTONLARI (Web Task 12 paritesi)
-# 4 buton: 🎲 Klasik, 🇹🇷 Türkçe→İngilizce, 🇬🇧 İngilizce→Türkçe, 🔊 Sesli
+# OYUN MODU BUTONLARI
+# Arayüzde 2 anlamlı seçenek: 🎲 Klasik ve 🔊 Sesli.
+# Yönlü modlar GameModeManager'da geriye uyumluluk için durur fakat gösterilmez.
 # Aktif mod -> amber gradient (dolu), diğerleri -> outline (şeffaf + ince border)
 # Mod butonları her zaman etkindir (web paritesi); mod değişince
 # _on_mode_changed -> _new_game çağrılır (oyun yeniden başlar).
 # ============================================================
 
-# 4 oyun modu butonunu kod ile oluştur (Main.tscn'deki GameModeFlow içine).
+# Görünen oyun modu butonlarını kod ile oluştur (Main.tscn'deki GameModeFlow içine).
 # toggle_mode=false: basınca "pressed" sinyali yayılır, görsel durumu
 # _apply_mode_button_states() ile senkronize edilir (aktif mod).
 func _build_mode_buttons() -> void:
@@ -332,7 +399,11 @@ func _build_mode_buttons() -> void:
 																if mode_buttons.size() > 0:
 																																return
 
-																for mode in GameModeManager.get_all_modes():
+																var visible_modes: Array = [
+																								GameModeManager.GameMode.CLASSIC,
+																								GameModeManager.GameMode.AUDIO,
+																]
+																for mode in visible_modes:
 																																var btn: Button = Button.new()
 																																btn.name = "Mode_%d" % mode
 																																btn.text = GameModeManager.get_mode_button_text(mode)
@@ -649,6 +720,14 @@ func _on_resume_button_pressed() -> void:
 																																GameManager.toggle_pause()
 
 
+func _on_pause_restart_pressed() -> void:
+																# Duraklatmayi birak, sonra tahtayi bastan kur.
+																# (Mobilde/dokunmatikte klavye kisayolu yok; tek yol bu buton.)
+																if GameManager.is_paused:
+																																GameManager.toggle_pause()
+																_new_game()
+
+
 func _on_mute_button_pressed() -> void:
 																var muted: bool = AudioManager.toggle_mute()
 																if mute_button:
@@ -694,6 +773,7 @@ func _on_clear_categories_pressed() -> void:
 func _on_categories_changed(selected_cats: Array) -> void:
 																_suppress_category_restart = true
 																_apply_category_button_states()
+																_apply_category_menu_state()
 																_suppress_category_restart = false
 																# Yeni kategoriyle yeni oyun
 																_new_game()
@@ -777,7 +857,7 @@ func _on_pause_changed(is_paused: bool) -> void:
 
 # --- Klavye kısayolları ---
 # R = yeniden başlat, H = ipucu, P = duraklat, M = sesi aç/kapat
-# ESC = duraklatılmışsa devam et (GameOverPanel açıkken bir şey yapma)
+# ESC = duraklat / devam et (ac/kapa)
 func _unhandled_input(event: InputEvent) -> void:
 																if not (event is InputEventKey):
 																																return
@@ -802,9 +882,8 @@ func _unhandled_input(event: InputEvent) -> void:
 																																																_on_mute_button_pressed()
 																																																get_viewport().set_input_as_handled()
 																																KEY_ESCAPE:
-																																																if GameManager.is_paused:
-																																																																GameManager.toggle_pause()
-																																																																get_viewport().set_input_as_handled()
+																																																GameManager.toggle_pause()
+																																																get_viewport().set_input_as_handled()
 
 # Debug print for test verification
 func _print_debug_init() -> void:
@@ -859,9 +938,11 @@ func _apply_board_layout() -> void:
 
 
 # `n` kart icin `avail_h` yuksekligine sigan EN AZ sutun sayisini dondurur.
-# En az sutun = en genis kartlar; bu yuzden 1'den baslayip sigan ilk degeri seciyoruz.
+# Kart grafikleri yatay orana gore tasarlandigi icin her dil tarafinda en az 2
+# sutun kullanilir; tek sutun kartlari asiri genis ve basik gosteriyordu.
 func _pick_board_columns(n: int, avail_h: float) -> int:
-	for cols in range(1, n + 1):
+	var first_column_count: int = mini(2, n)
+	for cols in range(first_column_count, n + 1):
 		var rows: int = int(ceil(float(n) / float(cols)))
 		var needed: float = float(rows) * BOARD_CELL_MIN_H + float(rows - 1) * BOARD_SEPARATION
 		if needed <= avail_h:

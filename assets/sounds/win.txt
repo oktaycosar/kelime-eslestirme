@@ -1,4 +1,0 @@
-Bu dosya bir PLACEHOLDER'dir (yer tutucu).
-Gerçek ses dosyası: win.wav (veya .ogg)
-Açıklama: Oyun kazanma sesi (uzun triumfan melodisi).
-Nasıl ekleneceğini assets/sounds/README.txt dosyasından okuyun.

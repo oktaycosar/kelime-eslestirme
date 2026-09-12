@@ -71,6 +71,15 @@ var is_muted: bool = false
 # AudioManager.play_word(card.word) çağrılır.
 var audio_mode_enabled: bool = false
 
+# --- Metin okuma (TTS) yedegi ---
+# assets/sounds/words/ altinda ses dosyasi yoksa kelime, isletim sisteminin
+# konusma senteziyle okunur. Boylece "Sesli Mod" hic ses dosyasi olmadan
+# da calisir. TTS desteklenmiyorsa (headless vb.) sessizce devre disi kalir.
+var _tts_available: bool = false
+var _tts_voice_id: String = ""
+# Secilen ses Ingilizce mi? (false ise telafuz o dilin sesine gore olur)
+var _tts_is_english: bool = false
+
 
 func _ready() -> void:
         # 7 ayrı player oluştur (üst üste binen sesler için)
@@ -102,6 +111,7 @@ func _ready() -> void:
         add_child(_word_player)
 
         _load_all_streams()
+        _init_tts()
 
 
 # Tüm ses akışlarını güvenli şekilde yükler
@@ -212,6 +222,8 @@ func play_resume() -> void:
 func set_audio_mode(enabled: bool) -> void:
         audio_mode_enabled = enabled
         print("AudioManager: sesli mod ", "AÇIK" if enabled else "KAPALI")
+        if not enabled:
+                _stop_speaking()
 
 
 # Verilen kelimenin ses dosyasını çal (Sesli mod için).
@@ -236,8 +248,8 @@ func play_word(word: String) -> void:
                 _word_stream_cache[word] = stream  # null da cache'lenir
 
         if stream == null:
-                # Ses dosyası yok - sessizce atla (placeholder durum)
-                # print("AudioManager: kelime ses dosyası yok: ", word)
+                # Ses dosyasi yok -> konusma senteziyle oku (Sesli Mod sessiz kalmasin)
+                _speak_word(word)
                 return
 
         # Player'a stream ata ve çal
@@ -247,6 +259,58 @@ func play_word(word: String) -> void:
                 _word_player.stop()
         _word_player.volume_db = linear_to_db(master_volume) if master_volume > 0.0 else -80.0
         _word_player.play()
+
+
+# --- Metin okuma (TTS) ---
+# play_word, ses dosyasi bulamadiginda kelimeyi konusma senteziyle okur.
+func _init_tts() -> void:
+        _tts_available = false
+        _tts_voice_id = ""
+        if not DisplayServer.has_feature(DisplayServer.FEATURE_TEXT_TO_SPEECH):
+                return
+        var voices: Array = DisplayServer.tts_get_voices()
+        if voices.is_empty():
+                return
+        # Ingilizce ses tercih edilir (oyun Ingilizce kelime okur).
+        for v in voices:
+                if String(v.get("language", "")).begins_with("en"):
+                        _tts_voice_id = String(v.get("id", ""))
+                        break
+        _tts_is_english = _tts_voice_id != ""
+        if _tts_voice_id == "":
+                # Ingilizce ses yok: mevcut sesi kullan ama BILDIR. Bu durumda
+                # Ingilizce kelimeler o dilin telafuzuyla okunur. Windows
+                # ayarlarindan Ingilizce konusma sesi eklenirse uyari kaybolur.
+                _tts_voice_id = String(voices[0].get("id", ""))
+                print("AudioManager: Ingilizce TTS sesi yok, mevcut ses kullaniliyor (",
+                        String(voices[0].get("name", "?")), ").")
+        _tts_available = _tts_voice_id != ""
+
+
+# Kelimeyi TTS ile oku. Bos kelime ve sessiz mod yoksayilir.
+func _speak_word(word: String) -> void:
+        if not _tts_available or is_muted:
+                return
+        var volume: int = int(clampf(master_volume, 0.0, 1.0) * 100.0)
+        DisplayServer.tts_speak(word, _tts_voice_id, volume, 1.0, 1.0, 0, true)
+
+
+# Konusmayi durdur (sesli mod kapatilinca).
+func _stop_speaking() -> void:
+        if not _tts_available:
+                return
+        DisplayServer.tts_stop()
+
+
+# TTS yedegi bu platformda kullanilabilir mi (test/gözlemlenebilirlik).
+func is_tts_available() -> bool:
+        return _tts_available
+
+
+# Secilen TTS sesi Ingilizce mi? false ise kelimeler baska bir dilin
+# telafuzuyla okunur (kullaniciya bilgi vermek icin).
+func is_tts_english() -> bool:
+        return _tts_is_english
 
 
 # Bir kelime için ses dosyasını diskten yükle (cache'e koymadan önce).

@@ -1,30 +1,63 @@
-[gd_scene load_steps=4 format=3 uid="uid://b1card01xyz"]
+[gd_scene load_steps=9 format=3 uid="uid://b1card01xyz"]
 
 [ext_resource type="Script" path="res://scripts/Card.gd" id="1_card_script"]
+[ext_resource type="Texture2D" path="res://assets/card_back_cut.svg" id="2_card_back"]
+[ext_resource type="FontFile" path="res://assets/fonts/Poppins-Bold.ttf" id="3_poppins_bold"]
+[ext_resource type="FontFile" path="res://assets/fonts/Poppins-SemiBold.ttf" id="4_poppins_semi"]
 
 [sub_resource type="StyleBoxFlat" id="back_style"]
-bg_color = Color(0.2, 0.36, 0.55, 1)
-corner_radius_top_left = 14
-corner_radius_top_right = 14
-corner_radius_bottom_right = 14
-corner_radius_bottom_left = 14
-border_width_left = 3
-border_width_top = 3
-border_width_right = 3
-border_width_bottom = 3
-border_color = Color(0.5, 0.62, 0.82, 1)
+bg_color = Color(0, 0, 0, 0)
+corner_radius_top_left = 18
+corner_radius_top_right = 18
+corner_radius_bottom_right = 18
+corner_radius_bottom_left = 18
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0, 0, 0, 0)
+anti_aliasing = true
+
+[sub_resource type="StyleBoxFlat" id="back_inner_style"]
+bg_color = Color(0.15, 0.27, 0.43, 0.78)
+corner_radius_top_left = 13
+corner_radius_top_right = 13
+corner_radius_bottom_right = 13
+corner_radius_bottom_left = 13
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.55, 0.7, 0.92, 0.22)
 
 [sub_resource type="StyleBoxFlat" id="front_style"]
-bg_color = Color(0.98, 0.85, 0.6, 1)
-corner_radius_top_left = 14
-corner_radius_top_right = 14
-corner_radius_bottom_right = 14
-corner_radius_bottom_left = 14
+bg_color = Color(0.96, 0.9, 0.76, 1)
+corner_radius_top_left = 18
+corner_radius_top_right = 18
+corner_radius_bottom_right = 18
+corner_radius_bottom_left = 18
 border_width_left = 3
 border_width_top = 3
 border_width_right = 3
 border_width_bottom = 3
-border_color = Color(0.7, 0.55, 0.3, 1)
+border_color = Color(0.82, 0.62, 0.24, 1)
+shadow_color = Color(0.02, 0.04, 0.09, 0.48)
+shadow_size = 6
+shadow_offset = Vector2(0, 3)
+
+[sub_resource type="StyleBoxFlat" id="badge_style"]
+bg_color = Color(0.76, 0.13, 0.18, 1)
+border_width_bottom = 2
+border_color = Color(1, 0.68, 0.7, 0.9)
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+content_margin_left = 10.0
+content_margin_top = 3.0
+content_margin_right = 10.0
+content_margin_bottom = 5.0
+shadow_color = Color(0.02, 0.04, 0.09, 0.45)
+shadow_size = 3
+shadow_offset = Vector2(0, 2)
 
 [node name="Card" type="TextureButton"]
 custom_minimum_size = Vector2(180, 70)
@@ -47,6 +80,65 @@ grow_vertical = 2
 mouse_filter = 2
 theme_override_styles/panel = SubResource("back_style")
 
+[node name="BackGraphic" type="TextureRect" parent="BackPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("2_card_back")
+expand_mode = 1
+stretch_mode = 0
+
+[node name="BackInner" type="Panel" parent="BackPanel"]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 6.0
+offset_top = 6.0
+offset_right = -6.0
+offset_bottom = -6.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("back_inner_style")
+
+[node name="CornerMark" type="Label" parent="BackPanel"]
+layout_mode = 1
+offset_left = 14.0
+offset_top = 9.0
+offset_right = 44.0
+offset_bottom = 35.0
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.55, 0.75, 1, 0.85)
+theme_override_font_sizes/font_size = 16
+text = "◆"
+
+[node name="LanguageBadge" type="Label" parent="BackPanel"]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -72.0
+offset_top = 0.0
+offset_right = -14.0
+offset_bottom = 29.0
+grow_horizontal = 0
+mouse_filter = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_shadow_color = Color(0.08, 0.03, 0.04, 0.55)
+theme_override_constants/shadow_offset_y = 1
+theme_override_fonts/font = ExtResource("4_poppins_semi")
+theme_override_font_sizes/font_size = 13
+theme_override_styles/normal = SubResource("badge_style")
+text = "TR"
+horizontal_alignment = 1
+vertical_alignment = 1
+
 [node name="BackLabel" type="Label" parent="BackPanel"]
 layout_mode = 1
 anchors_preset = 15
@@ -55,6 +147,11 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
+theme_override_colors/font_color = Color(0.94, 0.97, 1, 1)
+theme_override_colors/font_shadow_color = Color(0.04, 0.08, 0.15, 0.7)
+theme_override_constants/shadow_offset_x = 0
+theme_override_constants/shadow_offset_y = 2
+theme_override_fonts/font = ExtResource("4_poppins_semi")
 theme_override_font_sizes/font_size = 32
 text = "?"
 horizontal_alignment = 1
@@ -71,19 +168,41 @@ grow_vertical = 2
 mouse_filter = 2
 theme_override_styles/panel = SubResource("front_style")
 
+[node name="LanguageBadge" type="Label" parent="FrontPanel"]
+layout_mode = 1
+offset_left = 14.0
+offset_top = 0.0
+offset_right = 72.0
+offset_bottom = 29.0
+mouse_filter = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_shadow_color = Color(0.08, 0.03, 0.04, 0.55)
+theme_override_constants/shadow_offset_y = 1
+theme_override_fonts/font = ExtResource("4_poppins_semi")
+theme_override_font_sizes/font_size = 13
+theme_override_styles/normal = SubResource("badge_style")
+text = "TR"
+horizontal_alignment = 1
+vertical_alignment = 1
+
 [node name="WordLabel" type="Label" parent="FrontPanel"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 6.0
-offset_top = 4.0
-offset_right = -6.0
-offset_bottom = -4.0
+offset_left = 16.0
+offset_top = 12.0
+offset_right = -16.0
+offset_bottom = -10.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
+theme_override_fonts/font = ExtResource("3_poppins_bold")
 theme_override_font_sizes/font_size = 18
+theme_override_colors/font_color = Color(0.12, 0.15, 0.2, 1)
+theme_override_colors/font_shadow_color = Color(0.04, 0.06, 0.1, 0.24)
+theme_override_constants/shadow_offset_x = 0
+theme_override_constants/shadow_offset_y = 1
 text = "KELİME"
 horizontal_alignment = 1
 vertical_alignment = 1

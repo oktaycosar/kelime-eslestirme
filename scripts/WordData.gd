@@ -1,6 +1,6 @@
 # ============================================================
 # WordData.gd  (Autoload singleton)
-# Merkezi kelime havuzu. 14 kategori × 15 çift = 210 çift.
+# Merkezi kelime havuzu. 14 kategori × 20 çift = 280 çift.
 # ------------------------------------------------------------
 # Yapı:
 #   {"pair_id": int, "turkish": String, "english": String, "category": String}
@@ -56,7 +56,7 @@ const CATEGORIES: Array = [
         { "id": "transport",    "label": "Ulaşım",      "label_en": "Transport",   "emoji": "🚗",   "description": "Araba, otobüs, tren ve daha fazlası" },
 ]
 
-# --- 210 çift kelime havuzu (web ile birebir aynı) ---
+# --- 280 çift kelime havuzu ---
 const WORD_PAIRS: Array = [
         # === ANIMALS (Hayvanlar) ===
         { "pair_id": 1,  "turkish": "KÖPEK",   "english": "DOG",      "category": "animals" },
@@ -297,6 +297,91 @@ const WORD_PAIRS: Array = [
         { "pair_id": 208, "turkish": "HELİKOPTER", "english": "HELICOPTER", "category": "transport" },
         { "pair_id": 209, "turkish": "ROKET",      "english": "ROCKET",     "category": "transport" },
         { "pair_id": 210, "turkish": "SKUTER",     "english": "SCOOTER",    "category": "transport" },
+        # === Kelime dağarcığı genişletmesi (211-280): her kategoriye +5 çift ===
+        # === ANIMALS (211-215) ===
+        { "pair_id": 211, "turkish": "ZEBRA",      "english": "ZEBRA",     "category": "animals" },
+        { "pair_id": 212, "turkish": "ZÜRAFA",     "english": "GIRAFFE",   "category": "animals" },
+        { "pair_id": 213, "turkish": "KAPLUMBAĞA", "english": "TURTLE",    "category": "animals" },
+        { "pair_id": 214, "turkish": "YUNUS",      "english": "DOLPHIN",   "category": "animals" },
+        { "pair_id": 215, "turkish": "BAYKUŞ",     "english": "OWL",       "category": "animals" },
+        # === FOOD (216-220) ===
+        { "pair_id": 216, "turkish": "PİRİNÇ",     "english": "RICE",       "category": "food" },
+        { "pair_id": 217, "turkish": "ÇORBA",      "english": "SOUP",       "category": "food" },
+        { "pair_id": 218, "turkish": "ÇİLEK",      "english": "STRAWBERRY", "category": "food" },
+        { "pair_id": 219, "turkish": "PATATES",    "english": "POTATO",     "category": "food" },
+        { "pair_id": 220, "turkish": "TEREYAĞI",   "english": "BUTTER",     "category": "food" },
+        # === NATURE (221-225) ===
+        { "pair_id": 221, "turkish": "ADA",        "english": "ISLAND",     "category": "nature" },
+        { "pair_id": 222, "turkish": "VADİ",       "english": "VALLEY",     "category": "nature" },
+        { "pair_id": 223, "turkish": "ŞELALE",     "english": "WATERFALL",  "category": "nature" },
+        { "pair_id": 224, "turkish": "OKYANUS",    "english": "OCEAN",      "category": "nature" },
+        { "pair_id": 225, "turkish": "MAĞARA",     "english": "CAVE",       "category": "nature" },
+        # === HOUSE (226-230) ===
+        { "pair_id": 226, "turkish": "KANEPE",     "english": "SOFA",       "category": "house" },
+        { "pair_id": 227, "turkish": "YASTIK",     "english": "PILLOW",     "category": "house" },
+        { "pair_id": 228, "turkish": "BATTANİYE",  "english": "BLANKET",    "category": "house" },
+        { "pair_id": 229, "turkish": "BUZDOLABI",  "english": "FRIDGE",     "category": "house" },
+        { "pair_id": 230, "turkish": "PERDE",      "english": "CURTAIN",    "category": "house" },
+        # === BODY (231-235) ===
+        { "pair_id": 231, "turkish": "KALP",       "english": "HEART",      "category": "body" },
+        { "pair_id": 232, "turkish": "SIRT",       "english": "BACK",       "category": "body" },
+        { "pair_id": 233, "turkish": "DİZ",        "english": "KNEE",       "category": "body" },
+        { "pair_id": 234, "turkish": "DİRSEK",     "english": "ELBOW",      "category": "body" },
+        { "pair_id": 235, "turkish": "MİDE",       "english": "STOMACH",    "category": "body" },
+        # === SCHOOL (236-240) ===
+        { "pair_id": 236, "turkish": "SINIF",      "english": "CLASSROOM",  "category": "school" },
+        { "pair_id": 237, "turkish": "ÖDEV",       "english": "HOMEWORK",   "category": "school" },
+        { "pair_id": 238, "turkish": "SINAV",      "english": "EXAM",       "category": "school" },
+        { "pair_id": 239, "turkish": "KÜTÜPHANE",  "english": "LIBRARY",    "category": "school" },
+        { "pair_id": 240, "turkish": "SORU",       "english": "QUESTION",   "category": "school" },
+        # === CLOTHING (241-245) ===
+        { "pair_id": 241, "turkish": "ELBİSE",     "english": "DRESS",      "category": "clothing" },
+        { "pair_id": 242, "turkish": "MONTO",      "english": "COAT",       "category": "clothing" },
+        { "pair_id": 243, "turkish": "KAZAK",      "english": "SWEATER",    "category": "clothing" },
+        { "pair_id": 244, "turkish": "TERLİK",     "english": "SLIPPER",    "category": "clothing" },
+        { "pair_id": 245, "turkish": "ŞEMSİYE",    "english": "UMBRELLA",   "category": "clothing" },
+        # === COLORS (246-250) ===
+        { "pair_id": 246, "turkish": "TURKUAZ",      "english": "TURQUOISE", "category": "colors" },
+        { "pair_id": 247, "turkish": "BORDO",        "english": "MAROON",    "category": "colors" },
+        { "pair_id": 248, "turkish": "KREM",         "english": "CREAM",     "category": "colors" },
+        { "pair_id": 249, "turkish": "ZEYTİN YEŞİLİ", "english": "OLIVE",     "category": "colors" },
+        { "pair_id": 250, "turkish": "EFLATUN",      "english": "VIOLET",    "category": "colors" },
+        # === NUMBERS (251-255) ===
+        { "pair_id": 251, "turkish": "BİN",        "english": "THOUSAND", "category": "numbers" },
+        { "pair_id": 252, "turkish": "MİLYON",     "english": "MILLION",  "category": "numbers" },
+        { "pair_id": 253, "turkish": "BİRİNCİ",    "english": "FIRST",    "category": "numbers" },
+        { "pair_id": 254, "turkish": "YARIM",      "english": "HALF",     "category": "numbers" },
+        { "pair_id": 255, "turkish": "ÇEYREK",     "english": "QUARTER",  "category": "numbers" },
+        # === FAMILY (256-260) ===
+        { "pair_id": 256, "turkish": "KUZEN",        "english": "COUSIN",     "category": "family" },
+        { "pair_id": 257, "turkish": "ERKEK YEĞEN",  "english": "NEPHEW",     "category": "family" },
+        { "pair_id": 258, "turkish": "KIZ YEĞEN",    "english": "NIECE",      "category": "family" },
+        { "pair_id": 259, "turkish": "EBEVEYNLER",   "english": "PARENTS",    "category": "family" },
+        { "pair_id": 260, "turkish": "İKİZLER",      "english": "TWINS",      "category": "family" },
+        # === PROFESSIONS (261-265) ===
+        { "pair_id": 261, "turkish": "DİŞ HEKİMİ", "english": "DENTIST",      "category": "professions" },
+        { "pair_id": 262, "turkish": "VETERİNER",  "english": "VETERINARIAN", "category": "professions" },
+        { "pair_id": 263, "turkish": "MİMAR",      "english": "ARCHITECT",    "category": "professions" },
+        { "pair_id": 264, "turkish": "ECZACI",     "english": "PHARMACIST",   "category": "professions" },
+        { "pair_id": 265, "turkish": "GAZETECİ",   "english": "JOURNALIST",   "category": "professions" },
+        # === EMOTIONS (266-270) ===
+        { "pair_id": 266, "turkish": "ENDİŞELİ",       "english": "WORRIED",  "category": "emotions" },
+        { "pair_id": 267, "turkish": "KAFASI KARIŞIK", "english": "CONFUSED", "category": "emotions" },
+        { "pair_id": 268, "turkish": "YALNIZ",         "english": "LONELY",   "category": "emotions" },
+        { "pair_id": 269, "turkish": "UMUTLU",         "english": "HOPEFUL",  "category": "emotions" },
+        { "pair_id": 270, "turkish": "KISKANÇ",        "english": "JEALOUS",  "category": "emotions" },
+        # === WEATHER (271-275) ===
+        { "pair_id": 271, "turkish": "ŞİMŞEK",         "english": "LIGHTNING", "category": "weather" },
+        { "pair_id": 272, "turkish": "GÖK GÜRÜLTÜSÜ",  "english": "THUNDER",   "category": "weather" },
+        { "pair_id": 273, "turkish": "DOLU",           "english": "HAIL",      "category": "weather" },
+        { "pair_id": 274, "turkish": "AYAZ",           "english": "FROST",     "category": "weather" },
+        { "pair_id": 275, "turkish": "GÖKKUŞAĞI",      "english": "RAINBOW",   "category": "weather" },
+        # === TRANSPORT (276-280) ===
+        { "pair_id": 276, "turkish": "AMBULANS",  "english": "AMBULANCE", "category": "transport" },
+        { "pair_id": 277, "turkish": "MİNİBÜS",   "english": "MINIBUS",   "category": "transport" },
+        { "pair_id": 278, "turkish": "YELKENLİ",  "english": "SAILBOAT",  "category": "transport" },
+        { "pair_id": 279, "turkish": "KAMYONET",  "english": "VAN",       "category": "transport" },
+        { "pair_id": 280, "turkish": "TELEFERİK", "english": "CABLE CAR", "category": "transport" },
 ]
 
 

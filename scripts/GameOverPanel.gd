@@ -19,11 +19,13 @@
 extends Control
 
 signal replay_pressed
+signal quit_requested
 
 @onready var title_label: Label = $CenterContainer/DialogPanel/VBox/TitleLabel
 @onready var subtitle_label: Label = $CenterContainer/DialogPanel/VBox/SubtitleLabel
 @onready var stats_label: Label = $CenterContainer/DialogPanel/VBox/StatsLabel
 @onready var replay_button: Button = $CenterContainer/DialogPanel/VBox/ReplayButton
+@onready var quit_button: Button = $CenterContainer/DialogPanel/VBox/QuitButton
 @onready var record_badge: Label = $CenterContainer/DialogPanel/VBox/RecordBadge
 @onready var best_score_label: Label = $CenterContainer/DialogPanel/VBox/BestScoreLabel
 @onready var difficulty_label: Label = $CenterContainer/DialogPanel/VBox/DifficultyLabel
@@ -34,6 +36,8 @@ func _ready() -> void:
         visible = false
         if not replay_button.pressed.is_connected(_on_replay_pressed):
                 replay_button.pressed.connect(_on_replay_pressed)
+        if quit_button and not quit_button.pressed.is_connected(_on_quit_pressed):
+                quit_button.pressed.connect(_on_quit_pressed)
         # Rozet başlangıçta gizli
         if record_badge:
                 record_badge.visible = false
@@ -107,3 +111,7 @@ func hide_panel() -> void:
 # TEKRAR OYNA butonuna basıldı
 func _on_replay_pressed() -> void:
         emit_signal("replay_pressed")
+
+# Kazanma panelindeki Cikis butonu: Main.gd dinler ve oyunu kapatir.
+func _on_quit_pressed() -> void:
+        emit_signal("quit_requested")

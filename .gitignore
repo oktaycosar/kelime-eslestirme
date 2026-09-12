@@ -1,42 +1,29 @@
-# Godot 4+ specific ignores
-# https://github.com/github/gitignore/blob/main/Godot.gitignore
+# Godot 4+
 .godot/
 /android/
-
-# Mono / C# specific ignores
 .mono/
 data_*/
 mono_crash.*.json
 
-# Export presets (contain local paths)
-export.cfg
-export_presets.cfg
-
-# Imported translations (auto-generated from CSV files)
-*.translation
-
-# OS generated files
-.DS_Store
-Thumbs.db
-desktop.ini
-
-# Editor / IDE files
-.vscode/
-.idea/
-*.swp
-*.swo
-
-# Build outputs
+# Disa aktarma ciktilari (build artefaktlari)
 *.exe
 *.x86_64
 *.pck
 *.apk
 *.aab
-build/
-dist/
+/build/
+/dist/
 
-# Godot AI bridge (dev tool, not part of the game; auto-added)
+# Godot AI kopru eklentisi (gelistirme araci, oyunun parcasi degil)
 /autoload/
 
-# Exported game (build artifact)
-/build/
+# Isletim sistemi
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor / IDE
+.vscode/
+.idea/
+*.swp
+*.swo

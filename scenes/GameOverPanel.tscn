@@ -45,7 +45,7 @@ mouse_filter = 2
 
 [node name="DialogPanel" type="Panel" parent="CenterContainer"]
 layout_mode = 2
-custom_minimum_size = Vector2(540, 460)
+custom_minimum_size = Vector2(540, 640)
 size_flags_horizontal = 4
 size_flags_vertical = 4
 mouse_filter = 2
@@ -142,3 +142,11 @@ custom_minimum_size = Vector2(220, 60)
 mouse_filter = 0
 theme_override_font_sizes/font_size = 26
 text = "TEKRAR OYNA"
+[node name="QuitButton" type="Button" parent="CenterContainer/DialogPanel/VBox"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 3
+custom_minimum_size = Vector2(220, 60)
+mouse_filter = 0
+theme_override_font_sizes/font_size = 26
+text = "Çıkış ✕"

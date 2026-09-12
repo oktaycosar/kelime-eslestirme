@@ -28,19 +28,33 @@ signal matched_card_clicked(card)
 @export var is_hinted: bool = false
 
 # --- Görsel renkler (subtle) ---
-const COLOR_TURKISH: Color = Color(0.98, 0.82, 0.55, 1.0)   # sıcak amber
-const COLOR_ENGLISH: Color = Color(0.62, 0.85, 0.98, 1.0)   # soğuk mavi
+const COLOR_TURKISH: Color = Color(1.0, 0.88, 0.62, 1.0)    # sıcak amber
+const COLOR_ENGLISH: Color = Color(0.68, 0.9, 0.78, 1.0)    # ferah yeşil
 const COLOR_MATCHED: Color = Color(0.62, 0.96, 0.66, 1.0)   # yeşil
-const COLOR_HINTED: Color = Color(0.78, 0.55, 0.95, 1.0)    # mor (ipucu)
+const COLOR_HINTED: Color = Color(0.82, 0.67, 0.98, 1.0)    # mor (ipucu)
+const BORDER_TURKISH: Color = Color(0.86, 0.62, 0.18, 1.0)
+const BORDER_ENGLISH: Color = Color(0.2, 0.66, 0.42, 1.0)
+const BORDER_MATCHED: Color = Color(0.18, 0.72, 0.34, 1.0)
+const BORDER_HINTED: Color = Color(0.57, 0.34, 0.82, 1.0)
+const BACK_BORDER: Color = Color(0.38, 0.57, 0.82, 1.0)
+const BACK_BORDER_HOVER: Color = Color(0.62, 0.8, 1.0, 1.0)
+const BANNER_TURKISH: Color = Color(0.78, 0.12, 0.17, 1.0)
+const BANNER_TURKISH_EDGE: Color = Color(1.0, 0.62, 0.65, 0.95)
+const BANNER_ENGLISH: Color = Color(0.08, 0.27, 0.58, 1.0)
+const BANNER_ENGLISH_EDGE: Color = Color(0.48, 0.72, 1.0, 0.95)
 
 # --- Alt node referansları ---
 @onready var back_panel: Panel = $BackPanel
+@onready var back_graphic: TextureRect = $BackPanel/BackGraphic
 @onready var front_panel: Panel = $FrontPanel
 @onready var word_label: Label = $FrontPanel/WordLabel
 @onready var back_label: Label = $BackPanel/BackLabel
+@onready var back_language_badge: Label = $BackPanel/LanguageBadge
+@onready var front_language_badge: Label = $FrontPanel/LanguageBadge
 
 # Pivot (flip animasyonu için merkez)
 var _base_scale: Vector2 = Vector2.ONE
+var _hovered: bool = false
 
 
 func _ready() -> void:
@@ -93,15 +107,33 @@ func _update_visual() -> void:
         back_panel.visible = show_back
         front_panel.visible = not show_back
 
-        # FrontPanel rengi öncelik sırasıyla: ipucu > eşleşme > dil
+        # Köşe banner'ı sütunları bir bakışta ayırt etmeyi kolaylaştırır.
+        var language_code: String = "TR" if language == "turkish" else "EN"
+        if back_language_badge:
+                back_language_badge.text = language_code
+                _style_language_banner(back_language_badge)
+        if front_language_badge:
+                front_language_badge.text = language_code
+                _style_language_banner(front_language_badge)
+
+        # FrontPanel rengi öncelik sırasıyla: ipucu > eşleşme > dil.
+        # Modulate yerine StyleBox güncellenir; metin rengi temiz ve okunaklı kalır.
+        var face_color: Color
+        var border_color: Color
         if is_hinted:
-                front_panel.modulate = COLOR_HINTED
+                face_color = COLOR_HINTED
+                border_color = BORDER_HINTED
         elif is_matched:
-                front_panel.modulate = COLOR_MATCHED
+                face_color = COLOR_MATCHED
+                border_color = BORDER_MATCHED
         elif language == "turkish":
-                front_panel.modulate = COLOR_TURKISH
+                face_color = COLOR_TURKISH
+                border_color = BORDER_TURKISH
         else:
-                front_panel.modulate = COLOR_ENGLISH
+                face_color = COLOR_ENGLISH
+                border_color = BORDER_ENGLISH
+        _set_panel_colors(front_panel, face_color, border_color)
+        _set_back_hover(_hovered)
 
         if word_label:
                 word_label.text = word
@@ -143,6 +175,34 @@ func _update_visual() -> void:
                 else:
                         back_font = 14
                 back_label.add_theme_font_size_override("font_size", back_font)
+
+
+func _set_panel_colors(panel: Panel, background: Color, border: Color) -> void:
+        var source: StyleBox = panel.get_theme_stylebox("panel")
+        if source is StyleBoxFlat:
+                var styled: StyleBoxFlat = source.duplicate()
+                styled.bg_color = background
+                styled.border_color = border
+                panel.add_theme_stylebox_override("panel", styled)
+
+
+func _style_language_banner(banner: Label) -> void:
+        var source: StyleBox = banner.get_theme_stylebox("normal")
+        if source is StyleBoxFlat:
+                var styled: StyleBoxFlat = source.duplicate()
+                if language == "turkish":
+                        styled.bg_color = BANNER_TURKISH
+                        styled.border_color = BANNER_TURKISH_EDGE
+                else:
+                        styled.bg_color = BANNER_ENGLISH
+                        styled.border_color = BANNER_ENGLISH_EDGE
+                banner.add_theme_stylebox_override("normal", styled)
+
+
+func _set_back_hover(active: bool) -> void:
+        if back_graphic == null:
+                return
+        back_graphic.modulate = Color(1.12, 1.16, 1.22, 1.0) if active else Color.WHITE
 
 
 # --- Flip animasyonu ---
@@ -264,18 +324,28 @@ func _on_mouse_entered() -> void:
                 return
         if disabled:
                 return
+        _hovered = true
+        _set_back_hover(true)
         var tween: Tween = create_tween()
-        tween.tween_property(self, "scale", Vector2(1.05, 1.05), 0.08).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+        tween.set_parallel(true)
+        tween.tween_property(self, "scale", Vector2(1.025, 1.025), 0.1).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+        tween.tween_property(self, "modulate", Color(1.06, 1.06, 1.08, 1.0), 0.1)
 
 
 func _on_mouse_exited() -> void:
+        _hovered = false
+        _set_back_hover(false)
         if is_open or is_matched:
                 # Açık/eşleşmiş kartlar olduğu gibi kalsın
                 var tween: Tween = create_tween()
+                tween.set_parallel(true)
                 tween.tween_property(self, "scale", _base_scale, 0.08).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+                tween.tween_property(self, "modulate", Color.WHITE, 0.08)
                 return
         var tween: Tween = create_tween()
-        tween.tween_property(self, "scale", _base_scale, 0.08).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+        tween.set_parallel(true)
+        tween.tween_property(self, "scale", _base_scale, 0.1).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+        tween.tween_property(self, "modulate", Color.WHITE, 0.1)
 
 
 # --- Tıklama ---
@@ -296,5 +366,7 @@ func reset_card() -> void:
         is_matched = false
         is_hinted = false
         disabled = false
+        _hovered = false
+        modulate = Color.WHITE
         scale = _base_scale
         _update_visual()

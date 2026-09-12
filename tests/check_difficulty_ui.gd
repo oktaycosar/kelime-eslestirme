@@ -92,7 +92,54 @@ func _run() -> void:
 			_check(quit_btn.pressed.get_connections().size() > 0,
 				"QuitButton pressed sinyaline bagli")
 			_check(quit_btn.text.length() > 0, "QuitButton etiketi bos degil")
+		var restart_btn = vbox.get_node_or_null("RestartButton")
+		_check(restart_btn != null, "RestartButton mevcut (mobil standardi)")
+		if restart_btn != null:
+			_check(restart_btn.pressed.get_connections().size() > 0,
+					"RestartButton pressed sinyaline bagli")
+			_check(restart_btn.text.length() > 0, "RestartButton etiketi bos degil")
 
+	# --- Duraklatma paneli: icerik paneli asiyor mu? (3 buton olunca risk) ---
+	if overlay != null and vbox != null:
+		overlay.visible = true
+		for i in range(3):
+			await process_frame
+		var panel = main.get_node_or_null("PauseOverlay/CenterContainer/DialogPanel")
+		if panel != null:
+			var pr: Rect2 = panel.get_global_rect()
+			var vb: Rect2 = vbox.get_global_rect()
+			print("    panel=%s  vbox=%s  vbox_min=%s" % [str(pr.size), str(vb.size), str(vbox.get_combined_minimum_size())])
+			_check(vb.position.y >= pr.position.y - 0.5, "Panel icerigi yukaridan tasmiyor")
+			_check(vb.end.y <= pr.end.y + 0.5, "Panel icerigi asagidan tasmiyor")
+		overlay.visible = false
+	
+	# --- RestartButton gercekten calisiyor mu? ---
+	if overlay != null and vbox != null:
+		var rb = vbox.get_node_or_null("RestartButton")
+		var gmgr = root.get_node_or_null("/root/GameManager")
+		if rb != null and gmgr != null:
+			gmgr.toggle_pause()
+			for i in range(2):
+				await process_frame
+			_check(gmgr.is_paused, "on kosul: oyun duraklatildi")
+			gmgr.moves = 5
+			rb.pressed.emit()
+			for i in range(4):
+				await process_frame
+			_check(not gmgr.is_paused, "RestartButton duraklatmayi kaldirdi")
+			_check(gmgr.moves == 0, "RestartButton hamle sayacini sifirladi")
+			_check(not overlay.visible, "RestartButton sonrasi PauseOverlay kapandi")
+	
+	# --- Kazanma paneli: TEKRAR OYNA + Cikis ---
+	var gop_vbox = main.get_node_or_null("GameOverPanel/CenterContainer/DialogPanel/VBox")
+	_check(gop_vbox != null, "GameOverPanel VBox mevcut")
+	if gop_vbox != null:
+		var replay_btn = gop_vbox.get_node_or_null("ReplayButton")
+		var gquit_btn = gop_vbox.get_node_or_null("QuitButton")
+		_check(replay_btn != null, "Kazanma panelinde ReplayButton mevcut")
+		_check(gquit_btn != null, "Kazanma panelinde QuitButton mevcut")
+		if gquit_btn != null:
+			_check(gquit_btn.text.length() > 0, "Kazanma QuitButton etiketi bos degil")
 	_finish()
 
 

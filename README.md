@@ -309,7 +309,7 @@ Kelime öğrenme kartı (Task 22):
 - Header panel'de 6 stat yan yana: Skor, Eşleşme, Hata, Süre, Hamle, Combo.
 - ControlBar: İpucu butonu + Duraklat butonu + Sesi Kapat butonu.
 - CategoryBar: "Kategoriler:" etiketi + HFlowContainer içinde 1 "🎲 Tümünü Göster" + 14 kategori butonu (toggle).
-- **GameModeBar** (Task 13): "Mod:" etiketi + HFlowContainer içinde 4 oyun modu butonu (🎲 Klasik, 🇹🇷 TR→EN, 🇬🇧 EN→TR, 🔊 Sesli).
+- **GameModeBar**: "Mod:" etiketi + iki sade seçenek (🎲 Klasik, 🔊 Sesli). Yönlü modlar gereksiz arayüz kalabalığını önlemek için gösterilmez.
 - **WrongSideMessage** (Task 13): Geçici bilgilendirme label'ı (yanlış sütun seçilince 2 sn görünür).
 - Combo `>= 2` ise mor renkle vurgulanır.
 - GameOverPanel: combo göster, en iyi skor göster, "YENİ REKOR!" rozeti.
@@ -981,7 +981,7 @@ Neden ayrı betikler: `TestRunner.gd` autoload olarak tasarlanmıştır, bu yüz
 `run_tests.gd` onu root'a ekleyen bir sarmalayıcıdır; diğer ikisi bağımsız
 `SceneTree` betikleridir.
 
-> **Ders:** Bu projede 426 test yeşilken oyun kazanılamıyordu (kartlar ekran
+> **Ders:** Bu projede tüm testler yeşilken oyun kazanılamıyordu (kartlar ekran
 > dışındaydı) — çünkü hiçbir test "kartlar gerçekten görünüyor mu" diye
 > bakmıyordu. Yeni özellik eklerken yalnızca mantığı değil, **kullanıcının
 > göreceğini** de doğrulayan bir iddia ekle.
@@ -994,7 +994,7 @@ Neden ayrı betikler: `TestRunner.gd` autoload olarak tasarlanmıştır, bu yüz
 
 - Preset: `export_presets.cfg` → **Windows** (x86_64, release,
   `binary_format/embed_pck=true` → tek dosya çıktı, ayrı `.pck` yok).
-- `exclude_filter="tests/*,autoload/*"` → testler ve Godot AI köprüsü oyuna girmez.
+- `exclude_filter="tests/*,autoload/*,tools/*"` → testler, ses üretici ve Godot AI köprüsü oyuna girmez.
 - `build/` klasörünü önce oluştur (Godot oluşturmaz, yoksa
   "The given export path doesn't exist" hatası verir).
 - Çıktı ~104 MB'tır; Windows export şablonlarının kurulu olması gerekir
@@ -1003,6 +1003,14 @@ Neden ayrı betikler: `TestRunner.gd` autoload olarak tasarlanmıştır, bu yüz
 ---
 ## 📜 Lisans
 
-Bu proje kişisel/akademik kullanım için açık kaynak olarak hazırlanmıştır. Ses dosyaları için ilgili kaynakların lisanslarına uyunuz.
+Bu projenin kaynak kodu **MIT lisansı** altındadır — bkz. [LICENSE](LICENSE).
+Kısaca: kullanabilir, değiştirebilir, ticari olarak da kullanabilirsiniz;
+tek şart telif satırını korumak.
+
+Projede kullanılan üçüncü taraf varlıklar (Poppins yazı tipi, Godot Engine) için
+bkz. [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md).
+
+Ses efektleri bu projede üretilmiştir (`tools/generate_sfx.gd`), dışarıdan
+indirilmiş ses örneği yoktur.
 
 İyi oyunlar! 🎉

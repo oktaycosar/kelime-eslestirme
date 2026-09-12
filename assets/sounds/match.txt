@@ -1,4 +1,0 @@
-Bu dosya bir PLACEHOLDER'dir (yer tutucu).
-Gerçek ses dosyası: match.wav (veya .ogg)
-Açıklama: Doğru eşleşme sesi (olumlu "ding" efekti).
-Nasıl ekleneceğini assets/sounds/README.txt dosyasından okuyun.

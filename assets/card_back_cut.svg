@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="540" height="200" viewBox="0 0 540 200">
+  <defs>
+    <linearGradient id="body" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#17375f"/>
+      <stop offset="1" stop-color="#0b1f3b"/>
+    </linearGradient>
+    <linearGradient id="edge" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#77bcff"/>
+      <stop offset="0.5" stop-color="#b8e3ff"/>
+      <stop offset="1" stop-color="#77bcff"/>
+    </linearGradient>
+    <filter id="shadow" x="-10%" y="-20%" width="120%" height="150%">
+      <feDropShadow dx="0" dy="7" stdDeviation="6" flood-color="#020814" flood-opacity="0.65"/>
+    </filter>
+  </defs>
+  <g filter="url(#shadow)">
+    <path d="M30 8H510L532 30V170L510 192H30L8 170V30Z" fill="url(#body)" stroke="url(#edge)" stroke-width="6"/>
+    <path d="M39 20H501L519 38V162L501 180H39L21 162V38Z" fill="none" stroke="#4385c7" stroke-width="3" opacity="0.85"/>
+    <path d="M62 34H478" stroke="#8fd0ff" stroke-width="3" opacity="0.22"/>
+    <path d="M62 166H478" stroke="#3977b5" stroke-width="3" opacity="0.34"/>
+    <path d="M18 63L31 76V124L18 137" fill="none" stroke="#73baff" stroke-width="5" opacity="0.9"/>
+    <path d="M522 63L509 76V124L522 137" fill="none" stroke="#73baff" stroke-width="5" opacity="0.9"/>
+    <path d="M45 73L58 83V117L45 127" fill="none" stroke="#2e6da9" stroke-width="4" opacity="0.6"/>
+    <path d="M495 73L482 83V117L495 127" fill="none" stroke="#2e6da9" stroke-width="4" opacity="0.6"/>
+    <path d="M250 23H290L300 33H240Z" fill="#75bdff" opacity="0.28"/>
+    <path d="M250 177H290L300 167H240Z" fill="#75bdff" opacity="0.2"/>
+  </g>
+</svg>

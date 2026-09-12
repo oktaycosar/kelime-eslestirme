@@ -377,13 +377,18 @@ func _test_main_scene_structure() -> void:
         _assert_true(title != null, "TitleLabel mevcut")
         if title != null:
                 _assert_eq(title.text, "KELİME EŞLEŞTİRME", "Title metni 'KELİME EŞLEŞTİRME'")
+        var title_logo: HBoxContainer = inst.get_node_or_null("RootVBox/TitleLogo")
+        _assert_true(title_logo != null, "Grafik TitleLogo mevcut")
+        if title_logo != null:
+                _assert_eq(title_logo.get_child_count(), 17, "TitleLogo 16 harf + bağlantı simgesi")
 
         # SubtitleLabel
         var subtitle: Label = inst.get_node_or_null("RootVBox/SubtitleLabel")
         _assert_true(subtitle != null, "SubtitleLabel mevcut")
         if subtitle != null:
                 _assert_true(subtitle.text.find("Türkçe") >= 0, "Subtitle 'Türkçe' içeriyor")
-                _assert_true(subtitle.text.find("English") >= 0, "Subtitle 'English' içeriyor")
+                _assert_true(subtitle.text.find("İngilizce") >= 0, "Subtitle 'İngilizce' içeriyor")
+                _assert_true(subtitle.text.find("TR") >= 0 and subtitle.text.find("EN") >= 0, "Subtitle TR/EN içeriyor")
 
         # TurkishCards container
         var trc: GridContainer = inst.get_node_or_null("RootVBox/GameArea/ColumnsHBox/TurkishColumn/TurkishCards")
@@ -735,11 +740,15 @@ func _test_main_scene_game_mode_bar() -> void:
         var bar: HBoxContainer = inst.get_node_or_null("RootVBox/GameModeBar")
         _assert_true(bar != null, "GameModeBar mevcut")
 
-        # GameModeFlow mevcut (4 buton container'i)
+        # GameModeFlow mevcut (sadeleştirilmiş 2 buton: Klasik + Sesli)
         var flow: HFlowContainer = inst.get_node_or_null("RootVBox/GameModeBar/GameModeFlow")
         _assert_true(flow != null, "GameModeFlow mevcut")
         if flow != null:
-                _assert_eq(flow.get_child_count(), 4, "GameModeFlow'ta 4 mod butonu")
+                _assert_eq(flow.get_child_count(), 2, "GameModeFlow'ta 2 mod butonu")
+                _assert_true(flow.get_node_or_null("Mode_0") != null, "Klasik mod butonu mevcut")
+                _assert_true(flow.get_node_or_null("Mode_3") != null, "Sesli mod butonu mevcut")
+                _assert_true(flow.get_node_or_null("Mode_1") == null, "TR→EN butonu arayüzden kaldırıldı")
+                _assert_true(flow.get_node_or_null("Mode_2") == null, "EN→TR butonu arayüzden kaldırıldı")
 
         # WrongSideMessage label mevcut
         var msg: Label = inst.get_node_or_null("RootVBox/WrongSideMessage")
