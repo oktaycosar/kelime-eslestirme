@@ -156,9 +156,7 @@ func _ready() -> void:
 # Testler doğrudan çağırabilir (geçici instantiate senaryoları için).
 func _initialize_first_game() -> void:
 																if not is_inside_tree() or is_queued_for_deletion():
-																																print("DEBUG aborted (not in tree), name=", name, " id=", get_instance_id())
 																																return
-																print("DEBUG running, name=", name, " id=", get_instance_id(), " trc=", turkish_cards_container, " enc=", english_cards_container)
 																_build_category_buttons()
 																_build_category_menu()
 																_apply_category_button_states()
@@ -167,7 +165,6 @@ func _initialize_first_game() -> void:
 																_build_difficulty_buttons()
 																_apply_difficulty_button_states()
 																_new_game()
-																print("DEBUG done, name=", name, " id=", get_instance_id(), " cards=", cards.size())
 
 
 # Kategori butonlarını kod ile oluştur (Main.tscn'deki CategoryFlow içine).
@@ -884,10 +881,6 @@ func _unhandled_input(event: InputEvent) -> void:
 																																KEY_ESCAPE:
 																																																GameManager.toggle_pause()
 																																																get_viewport().set_input_as_handled()
-
-# Debug print for test verification
-func _print_debug_init() -> void:
-																print("DEBUG Main._new_game tamamlandı, kart sayisi: ", cards.size())
 
 
 # ============================================================

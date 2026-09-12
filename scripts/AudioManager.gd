@@ -221,7 +221,6 @@ func play_resume() -> void:
 # - Bu fonksiyon yalnızca bayrak tutar, gerçek ses çalma play_word içindedir.
 func set_audio_mode(enabled: bool) -> void:
         audio_mode_enabled = enabled
-        print("AudioManager: sesli mod ", "AÇIK" if enabled else "KAPALI")
         if not enabled:
                 _stop_speaking()
 
