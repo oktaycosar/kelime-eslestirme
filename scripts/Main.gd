@@ -16,6 +16,15 @@ extends Control
 
 const CARD_SCENE: PackedScene = preload("res://scenes/Card.tscn")
 
+# Kategori cubugu: 15 buton tek satira sigmadigi icin dengeli 2 satira (8+7) sarar.
+# Bu degerler CategoryFlow'un ~1005px'lik alanina gore secildi; buyutursen 3. satir olusur.
+const CATEGORY_BUTTON_SIZE := Vector2(108, 32)
+const CATEGORY_CLEAR_BUTTON_SIZE := Vector2(132, 32)
+const CATEGORY_FONT_SIZE := 13
+# Oyun modu cubugu (Mod: Klasik / TR-EN / ...) - kategori cubugundan bagimsiz
+const MODE_BUTTON_SIZE := Vector2(170, 38)
+const MODE_FONT_SIZE := 15
+
 @onready var title_label: Label = $RootVBox/TitleLabel
 @onready var subtitle_label: Label = $RootVBox/SubtitleLabel
 @onready var turkish_cards_container: GridContainer = $RootVBox/GameArea/ColumnsHBox/TurkishColumn/TurkishCards
@@ -164,8 +173,8 @@ func _build_category_buttons() -> void:
 																clear_categories_button.name = "ClearCategoriesButton"
 																clear_categories_button.text = "🎲 Tümünü Göster"
 																clear_categories_button.toggle_mode = false
-																clear_categories_button.custom_minimum_size = Vector2(150, 36)
-																clear_categories_button.add_theme_font_size_override("font_size", 15)
+																clear_categories_button.custom_minimum_size = CATEGORY_CLEAR_BUTTON_SIZE
+																clear_categories_button.add_theme_font_size_override("font_size", CATEGORY_FONT_SIZE)
 																clear_categories_button.mouse_filter = Control.MOUSE_FILTER_STOP
 																_apply_button_style(clear_categories_button, false)
 																clear_categories_button.pressed.connect(_on_clear_categories_pressed)
@@ -177,8 +186,8 @@ func _build_category_buttons() -> void:
 																																btn.name = "Cat_" + cat["id"]
 																																btn.text = "%s %s" % [cat["emoji"], cat["label"]]
 																																btn.toggle_mode = true
-																																btn.custom_minimum_size = Vector2(130, 36)
-																																btn.add_theme_font_size_override("font_size", 15)
+																																btn.custom_minimum_size = CATEGORY_BUTTON_SIZE
+																																btn.add_theme_font_size_override("font_size", CATEGORY_FONT_SIZE)
 																																btn.mouse_filter = Control.MOUSE_FILTER_STOP
 																																btn.set_meta("category_id", cat["id"])
 																																_apply_button_style(btn, false)
@@ -316,8 +325,8 @@ func _build_mode_buttons() -> void:
 																																btn.name = "Mode_%d" % mode
 																																btn.text = GameModeManager.get_mode_button_text(mode)
 																																btn.toggle_mode = false
-																																btn.custom_minimum_size = Vector2(170, 38)
-																																btn.add_theme_font_size_override("font_size", 15)
+																																btn.custom_minimum_size = MODE_BUTTON_SIZE
+																																btn.add_theme_font_size_override("font_size", MODE_FONT_SIZE)
 																																btn.mouse_filter = Control.MOUSE_FILTER_STOP
 																																btn.tooltip_text = GameModeManager.get_mode_description(mode)
 																																btn.set_meta("mode", mode)
