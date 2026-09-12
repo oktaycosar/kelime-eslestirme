@@ -40,7 +40,10 @@ param(
     [switch]$NoPush
 )
 
-$ErrorActionPreference = "Stop"
+# NOT: "Stop" KULLANMIYORUZ. git push ilerlemesini stderr'e yazar (normal
+# davranis); "Stop" bunu oluimcul hata sayip script'i yarida kesiyor.
+# Onun yerine her kritik adimda cikis kodu ayrica kontrol edilir.
+$ErrorActionPreference = "Continue"
 $repo    = Split-Path $PSScriptRoot -Parent
 $WEB_DIR = Join-Path $repo "build\web"
 $URL     = "https://oktaycosar.github.io/kelime-eslestirme/"

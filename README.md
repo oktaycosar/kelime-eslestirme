@@ -1026,3 +1026,16 @@ Ses efektleri bu projede üretilmiştir (`tools/generate_sfx.gd`), dışarıdan
 indirilmiş ses örneği yoktur.
 
 İyi oyunlar! 🎉
+
+### Web surumunu guncelleme
+
+Oyunu degistirdikten sonra tarayici surumunu tek komutla guncelleyebilirsiniz:
+
+```powershell
+powershell -File tools\deploy_web.ps1
+```
+
+Script web export'unu alir ve `gh-pages` dalina yayinlar. `main` dali
+kaynak kod olarak temiz kalir; calisma agacina ve gercek index'e dokunulmaz.
+Derlemeyi atlamak icin `-SkipExport`, push etmeden denemek icin `-NoPush`
+kullanilabilir.
