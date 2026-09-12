@@ -1,6 +1,6 @@
 extends SceneTree
 ##
-## Zorluk secici regresyon testi.
+## Arayuz regresyon testi: zorluk secici + duraklatma penceresi cikis butonu.
 ##
 ## DifficultyManager dort zorlugu destekliyordu ama arayuzde secici yoktu;
 ## artik DifficultyBar var. Bu test hem dugumun varligini hem de butona
@@ -46,6 +46,7 @@ func _run() -> void:
 		_finish()
 		return
 
+
 	var expected_count: int = dm.Difficulty.size()
 	_check(flow.get_child_count() == expected_count,
 		"%d zorluk butonu (gercek %d)" % [expected_count, flow.get_child_count()])
@@ -76,6 +77,22 @@ func _run() -> void:
 		_check(enc.get_child_count() == pairs,
 			"zorluk %d -> EN sutununda %d kart (gercek %d)" % [d, pairs, enc.get_child_count()])
 
+	# --- Duraklatma penceresi: Devam et + Cikis ---
+	var overlay = main.get_node_or_null("PauseOverlay")
+	var vbox = main.get_node_or_null("PauseOverlay/CenterContainer/DialogPanel/VBox")
+	_check(overlay != null, "PauseOverlay dugumu mevcut")
+	_check(vbox != null, "PauseOverlay VBox mevcut")
+	if vbox != null:
+		var resume_btn = vbox.get_node_or_null("ResumeButton")
+		var quit_btn = vbox.get_node_or_null("QuitButton")
+		_check(resume_btn != null, "ResumeButton mevcut")
+		_check(quit_btn != null, "QuitButton mevcut")
+		# Buton var ama bagli degilse sessizce calismaz -- tam da bu test edilmeli
+		if quit_btn != null:
+			_check(quit_btn.pressed.get_connections().size() > 0,
+				"QuitButton pressed sinyaline bagli")
+			_check(quit_btn.text.length() > 0, "QuitButton etiketi bos degil")
+
 	_finish()
 
 
@@ -90,8 +107,8 @@ func _check(cond: bool, label: String) -> void:
 func _finish() -> void:
 	print("---------------------------------------------")
 	if _failures.is_empty():
-		print("ZORLUK SECICI: TUM TESTLER GECTI ✅")
+		print("ARAYUZ: TUM TESTLER GECTI ✅")
 		quit(0)
 	else:
-		print("ZORLUK SECICI: %d SORUN ❌" % _failures.size())
+		print("ARAYUZ: %d SORUN ❌" % _failures.size())
 		quit(1)

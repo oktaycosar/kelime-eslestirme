@@ -41,6 +41,7 @@ const DIFFICULTY_FONT_SIZE := 14
 @onready var mute_button: Button = $RootVBox/ControlBar/MuteButton
 @onready var pause_overlay: Control = $PauseOverlay
 @onready var resume_button: Button = $PauseOverlay/CenterContainer/DialogPanel/VBox/ResumeButton
+@onready var quit_button: Button = $PauseOverlay/CenterContainer/DialogPanel/VBox/QuitButton
 @onready var category_flow: HFlowContainer = $RootVBox/CategoryBar/CategoryFlow
 # Oyun modu butonları için container (Web Task 12 paritesi)
 @onready var game_mode_flow: HFlowContainer = $RootVBox/GameModeBar/GameModeFlow
@@ -111,6 +112,8 @@ func _ready() -> void:
 																																mute_button.pressed.connect(_on_mute_button_pressed)
 																if resume_button and not resume_button.pressed.is_connected(_on_resume_button_pressed):
 																																resume_button.pressed.connect(_on_resume_button_pressed)
+																if quit_button and not quit_button.pressed.is_connected(_on_quit_button_pressed):
+																																quit_button.pressed.connect(_on_quit_button_pressed)
 
 																# GameManager sinyallerini dinle
 																if not GameManager.hints_changed.is_connected(_on_hints_changed):
@@ -919,3 +922,18 @@ func _on_difficulty_button_pressed(difficulty: int) -> void:
 	DifficultyManager.set_difficulty(difficulty)
 	_apply_difficulty_button_states()
 	_new_game()
+
+# ============================================================
+# Cikis butonu
+# ============================================================
+# Masaustu exe'de oyundan cikmanin tek yolu pencereyi kapatmakti. Buton
+# duraklatma penceresine konuldu: oyuncunun once Duraklat'a basmasi gerekir,
+# boylece oyun ortasinda kazara cikis olmaz. Ayrica bir onay penceresi
+# yazmaya gerek kalmaz -- duraklatma penceresi o onayi saglar.
+#
+# get_tree().quit() sureci temiz kapatir; kaybedilecek veri yok (rekorlar
+# kazaninca senkron yazilir). Web ihracinda bu cagri etkisizdir, ama proje
+# Windows exe hedefliyor.
+
+func _on_quit_button_pressed() -> void:
+	get_tree().quit()
