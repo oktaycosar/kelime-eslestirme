@@ -1,9 +1,10 @@
-[gd_scene load_steps=9 format=3 uid="uid://b1card01xyz"]
+[gd_scene load_steps=10 format=3 uid="uid://b1card01xyz"]
 
 [ext_resource type="Script" path="res://scripts/Card.gd" id="1_card_script"]
 [ext_resource type="Texture2D" path="res://assets/card_back_cut.svg" id="2_card_back"]
 [ext_resource type="FontFile" path="res://assets/fonts/Poppins-Bold.ttf" id="3_poppins_bold"]
 [ext_resource type="FontFile" path="res://assets/fonts/Poppins-SemiBold.ttf" id="4_poppins_semi"]
+[ext_resource type="Texture2D" path="res://assets/card_question.png" id="5_question"]
 
 [sub_resource type="StyleBoxFlat" id="back_style"]
 bg_color = Color(0, 0, 0, 0)
@@ -139,23 +140,19 @@ text = "TR"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="BackLabel" type="Label" parent="BackPanel"]
+[node name="BackQuestion" type="TextureRect" parent="BackPanel"]
 layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
+anchor_left = 0.3
+anchor_top = 0.16
+anchor_right = 0.7
+anchor_bottom = 0.84
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-theme_override_colors/font_color = Color(0.94, 0.97, 1, 1)
-theme_override_colors/font_shadow_color = Color(0.04, 0.08, 0.15, 0.7)
-theme_override_constants/shadow_offset_x = 0
-theme_override_constants/shadow_offset_y = 2
-theme_override_fonts/font = ExtResource("4_poppins_semi")
-theme_override_font_sizes/font_size = 32
-text = "?"
-horizontal_alignment = 1
-vertical_alignment = 1
+texture = ExtResource("5_question")
+expand_mode = 1
+stretch_mode = 5
+
 
 [node name="FrontPanel" type="Panel" parent="."]
 visible = false

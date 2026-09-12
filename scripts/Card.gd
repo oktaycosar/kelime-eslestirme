@@ -48,7 +48,7 @@ const BANNER_ENGLISH_EDGE: Color = Color(0.48, 0.72, 1.0, 0.95)
 @onready var back_graphic: TextureRect = $BackPanel/BackGraphic
 @onready var front_panel: Panel = $FrontPanel
 @onready var word_label: Label = $FrontPanel/WordLabel
-@onready var back_label: Label = $BackPanel/BackLabel
+@onready var back_question: TextureRect = $BackPanel/BackQuestion
 @onready var back_language_badge: Label = $BackPanel/LanguageBadge
 @onready var front_language_badge: Label = $FrontPanel/LanguageBadge
 
@@ -160,21 +160,8 @@ func _update_visual() -> void:
                 elif word.length() > 6 and base_font > 22:
                         base_font -= 4
                 word_label.add_theme_font_size_override("font_size", base_font)
-        if back_label:
-                # BackLabel "?" de kart yüksekliğine göre ölçeklenir
-                var bh: float = float(size.y)
-                var back_font: int = 16
-                if bh >= 120:
-                        back_font = 56
-                elif bh >= 80:
-                        back_font = 40
-                elif bh >= 60:
-                        back_font = 28
-                elif bh >= 40:
-                        back_font = 20
-                else:
-                        back_font = 14
-                back_label.add_theme_font_size_override("font_size", back_font)
+		# "?" artik TextureRect: boyutu anchor oraniyla otomatik olceklenir,
+		# bu yuzden burada ayrica font boyutu ayarlanmiyor.
 
 
 func _set_panel_colors(panel: Panel, background: Color, border: Color) -> void:
