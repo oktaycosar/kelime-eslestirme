@@ -170,45 +170,45 @@ func _test_word_data_categories() -> void:
         _begin_test("WordData kategori regresyon (Task 9 + Task 16 + Task 18)")
         # Task 16: 10 → 14 kategori, 90 → 126 çift. Task 18: her kategori +6 → 15 çift, 126 → 210 çift.
         _assert_eq(WordData.CATEGORIES.size(), 14, "CATEGORIES size = 14")
-        _assert_eq(WordData.WORD_PAIRS.size(), 210, "WORD_PAIRS size = 210 (Task 18)")
-        _assert_eq(WordData.get_total_pair_count(), 210, "get_total_pair_count = 210 (Task 18)")
+        _assert_eq(WordData.WORD_PAIRS.size(), 280, "WORD_PAIRS size = 280 (Task 18)")
+        _assert_eq(WordData.get_total_pair_count(), 280, "get_total_pair_count = 280 (Task 18)")
         # Kategori 15 çift (Task 18 sonrası her kategori 9 → 15)
-        _assert_eq(WordData.get_category_pair_count("animals"), 15, "animals 15 çift (Task 18)")
-        _assert_eq(WordData.get_category_pair_count("family"), 15, "family 15 çift (Task 18)")
+        _assert_eq(WordData.get_category_pair_count("animals"), 20, "animals 20 çift (Task 18)")
+        _assert_eq(WordData.get_category_pair_count("family"), 20, "family 20 çift (Task 18)")
         # Task 16: 4 yeni kategori - her biri 15 çift (Task 18 sonrası)
-        _assert_eq(WordData.get_category_pair_count("professions"), 15, "professions 15 çift (Task 18)")
-        _assert_eq(WordData.get_category_pair_count("emotions"), 15, "emotions 15 çift (Task 18)")
-        _assert_eq(WordData.get_category_pair_count("weather"), 15, "weather 15 çift (Task 18)")
-        _assert_eq(WordData.get_category_pair_count("transport"), 15, "transport 15 çift (Task 18)")
+        _assert_eq(WordData.get_category_pair_count("professions"), 20, "professions 20 çift (Task 18)")
+        _assert_eq(WordData.get_category_pair_count("emotions"), 20, "emotions 20 çift (Task 18)")
+        _assert_eq(WordData.get_category_pair_count("weather"), 20, "weather 20 çift (Task 18)")
+        _assert_eq(WordData.get_category_pair_count("transport"), 20, "transport 20 çift (Task 18)")
         # Yeni kategori sabitleri
         _assert_eq(WordData.CATEGORY_PROFESSIONS, "professions", "CATEGORY_PROFESSIONS = professions")
         _assert_eq(WordData.CATEGORY_EMOTIONS, "emotions", "CATEGORY_EMOTIONS = emotions")
         _assert_eq(WordData.CATEGORY_WEATHER, "weather", "CATEGORY_WEATHER = weather")
         _assert_eq(WordData.CATEGORY_TRANSPORT, "transport", "CATEGORY_TRANSPORT = transport")
         # Havuz sayısı
-        _assert_eq(WordData.get_pool_pair_count([]), 210, "boş havuz 210 (Task 18)")
-        _assert_eq(WordData.get_pool_pair_count(["animals"]), 15, "animals havuz 15 (Task 18)")
-        _assert_eq(WordData.get_pool_pair_count(["animals", "food"]), 30, "animals+food havuz 30 (Task 18)")
+        _assert_eq(WordData.get_pool_pair_count([]), 280, "boş havuz 280 (Task 18)")
+        _assert_eq(WordData.get_pool_pair_count(["animals"]), 20, "animals havuz 20 (Task 18)")
+        _assert_eq(WordData.get_pool_pair_count(["animals", "food"]), 40, "animals+food havuz 40 (Task 18)")
         # Task 16: 4 yeni kategori havuz sayilari (Task 18 sonrası 15)
-        _assert_eq(WordData.get_pool_pair_count(["professions"]), 15, "professions havuz 15 (Task 18)")
-        _assert_eq(WordData.get_pool_pair_count(["emotions"]), 15, "emotions havuz 15 (Task 18)")
-        _assert_eq(WordData.get_pool_pair_count(["weather"]), 15, "weather havuz 15 (Task 18)")
-        _assert_eq(WordData.get_pool_pair_count(["transport"]), 15, "transport havuz 15 (Task 18)")
+        _assert_eq(WordData.get_pool_pair_count(["professions"]), 20, "professions havuz 20 (Task 18)")
+        _assert_eq(WordData.get_pool_pair_count(["emotions"]), 20, "emotions havuz 20 (Task 18)")
+        _assert_eq(WordData.get_pool_pair_count(["weather"]), 20, "weather havuz 20 (Task 18)")
+        _assert_eq(WordData.get_pool_pair_count(["transport"]), 20, "transport havuz 20 (Task 18)")
         # 4 yeni kategori toplam (60 çift — Task 18: 4 × 15)
-        _assert_eq(WordData.get_pool_pair_count(["professions", "emotions", "weather", "transport"]), 60, "4 yeni kategori toplam 60 (Task 18)")
+        _assert_eq(WordData.get_pool_pair_count(["professions", "emotions", "weather", "transport"]), 80, "4 yeni kategori toplam 80 (Task 18)")
         # Random pairs
         _assert_eq(WordData.get_random_pairs(6).size(), 6, "6 rastgele çift")
         _assert_eq(WordData.get_random_pairs(0).size(), 0, "0 rastgele çift boş array")
         var many: Array = WordData.get_random_pairs(300)
-        _assert_eq(many.size(), 210, "300 istek → 210 döner (Task 18 havuz üst sınırı)")
+        _assert_eq(many.size(), 280, "300 istek → 280 döner (Task 18 havuz üst sınırı)")
         # Kategori filtreli
         _assert_eq(WordData.get_random_pairs(6, ["animals"]).size(), 6, "animals 6 çift")
-        _assert_eq(WordData.get_random_pairs(10, ["animals"]).size(), 10, "animals 10 iste → 10 döner (Task 18 sonrası 15 havuz)")
-        _assert_eq(WordData.get_random_pairs(15, ["animals"]).size(), 15, "animals 15 iste → 15 döner (Task 18 tam havuz)")
-        _assert_eq(WordData.get_random_pairs(20, ["animals"]).size(), 15, "animals 20 iste → 15 döner (havuz üst sınırı)")
+        _assert_eq(WordData.get_random_pairs(10, ["animals"]).size(), 10, "animals 10 iste → 10 döner (havuz 20)")
+        _assert_eq(WordData.get_random_pairs(15, ["animals"]).size(), 15, "animals 15 iste → 15 döner (havuz 20)")
+        _assert_eq(WordData.get_random_pairs(20, ["animals"]).size(), 20, "animals 20 iste → 20 döner (tam havuz)")
         # Task 16: yeni kategori filtreli (Task 18 sonrası 15)
         _assert_eq(WordData.get_random_pairs(6, ["professions"]).size(), 6, "professions 6 çift")
-        _assert_eq(WordData.get_random_pairs(15, ["professions"]).size(), 15, "professions 15 iste → 15 döner (Task 18 tam havuz)")
+        _assert_eq(WordData.get_random_pairs(15, ["professions"]).size(), 15, "professions 15 iste → 15 döner (havuz 20)")
         # build_cards
         var cards3: Array = WordData.build_cards(WordData.get_random_pairs(3))
         _assert_eq(cards3.size(), 6, "3 çift → 6 kart")
@@ -233,34 +233,34 @@ func _test_word_data_categories() -> void:
                 t16_expected.append(i)
         t16_pair_ids.sort()
         _assert_eq(t16_pair_ids, t16_expected, "Task 16 çift pair_id'leri 91-126 aralığında")
-        # Task 18: Yeni çiftlerin pair_id'leri 127-210 aralığında ve benzersiz (84 çift)
+        # Task 18: Yeni çiftlerin pair_id'leri 127-280 aralığında ve benzersiz (154 çift)
         var t18_pair_ids: Array = []
         for p in WordData.WORD_PAIRS:
                 if p["pair_id"] >= 127:
                         t18_pair_ids.append(p["pair_id"])
-        _assert_eq(t18_pair_ids.size(), 84, "Task 18 toplam 84 yeni çift")
+        _assert_eq(t18_pair_ids.size(), 154, "Task 18 toplam 154 yeni çift")
         var t18_expected: Array = []
-        for i in range(127, 211):
+        for i in range(127, 281):
                 t18_expected.append(i)
         t18_pair_ids.sort()
-        _assert_eq(t18_pair_ids, t18_expected, "Task 18 çift pair_id'leri 127-210 aralığında")
-        # Duplicate pair_id kontrolü: tüm 210 pair_id benzersiz olmalı
+        _assert_eq(t18_pair_ids, t18_expected, "Task 18 çift pair_id'leri 127-280 aralığında")
+        # Duplicate pair_id kontrolü: tüm 280 pair_id benzersiz olmalı
         var all_ids: Array = []
         for p in WordData.WORD_PAIRS:
                 all_ids.append(p["pair_id"])
-        _assert_eq(all_ids.size(), 210, "Toplam 210 pair_id")
+        _assert_eq(all_ids.size(), 280, "Toplam 280 pair_id")
         var unique_ids: Array = []
         for pid in all_ids:
                 if not unique_ids.has(pid):
                         unique_ids.append(pid)
-        _assert_eq(unique_ids.size(), 210, "210 benzersiz pair_id (duplicate yok)")
-        # Her kategori tam 15 çift (Task 18 sonrası)
+        _assert_eq(unique_ids.size(), 280, "280 benzersiz pair_id (duplicate yok)")
+        # Her kategori tam 20 çift (Task 18 sonrası)
         var cat_counts: Dictionary = {}
         for p in WordData.WORD_PAIRS:
                 var ck: String = p.get("category", "")
                 cat_counts[ck] = cat_counts.get(ck, 0) + 1
         for cat_key in cat_counts.keys():
-                _assert_eq(int(cat_counts[cat_key]), 15, "Kategori " + str(cat_key) + " 15 çift (Task 18)")
+                _assert_eq(int(cat_counts[cat_key]), 20, "Kategori " + str(cat_key) + " 20 çift (Task 18)")
         # Task 16: CATEGORIES 4 yeni kategori içeriyor
         var cat_ids: Array = []
         for c in WordData.CATEGORIES:
@@ -285,39 +285,39 @@ func _test_word_data_categories() -> void:
 
 # --- Task 18: 84 yeni çift detaylı test ---
 func _test_word_data_new_pairs_task18() -> void:
-        _begin_test("Task 18: 84 yeni çift (pair_id 127-210)")
-        # Her kategori için 6 yeni çiftin doğru category alanına sahip olduğunu doğrula
+        _begin_test("Task 18: 154 yeni çift (pair_id 127-280)")
+        # Her kategori için 11 yeni çiftin doğru category alanına sahip olduğunu doğrula
         # Task 18 yeni çift kategori bazında dağılımı (pair_id -> category)
         var expected_t18: Dictionary = {
-                "animals": [127, 128, 129, 130, 131, 132],
-                "food": [133, 134, 135, 136, 137, 138],
-                "nature": [139, 140, 141, 142, 143, 144],
-                "house": [145, 146, 147, 148, 149, 150],
-                "body": [151, 152, 153, 154, 155, 156],
-                "school": [157, 158, 159, 160, 161, 162],
-                "clothing": [163, 164, 165, 166, 167, 168],
-                "colors": [169, 170, 171, 172, 173, 174],
-                "numbers": [175, 176, 177, 178, 179, 180],
-                "family": [181, 182, 183, 184, 185, 186],
-                "professions": [187, 188, 189, 190, 191, 192],
-                "emotions": [193, 194, 195, 196, 197, 198],
-                "weather": [199, 200, 201, 202, 203, 204],
-                "transport": [205, 206, 207, 208, 209, 210],
+                "animals": [127, 128, 129, 130, 131, 132, 211, 212, 213, 214, 215],
+                "food": [133, 134, 135, 136, 137, 138, 216, 217, 218, 219, 220],
+                "nature": [139, 140, 141, 142, 143, 144, 221, 222, 223, 224, 225],
+                "house": [145, 146, 147, 148, 149, 150, 226, 227, 228, 229, 230],
+                "body": [151, 152, 153, 154, 155, 156, 231, 232, 233, 234, 235],
+                "school": [157, 158, 159, 160, 161, 162, 236, 237, 238, 239, 240],
+                "clothing": [163, 164, 165, 166, 167, 168, 241, 242, 243, 244, 245],
+                "colors": [169, 170, 171, 172, 173, 174, 246, 247, 248, 249, 250],
+                "numbers": [175, 176, 177, 178, 179, 180, 251, 252, 253, 254, 255],
+                "family": [181, 182, 183, 184, 185, 186, 256, 257, 258, 259, 260],
+                "professions": [187, 188, 189, 190, 191, 192, 261, 262, 263, 264, 265],
+                "emotions": [193, 194, 195, 196, 197, 198, 266, 267, 268, 269, 270],
+                "weather": [199, 200, 201, 202, 203, 204, 271, 272, 273, 274, 275],
+                "transport": [205, 206, 207, 208, 209, 210, 276, 277, 278, 279, 280],
         }
-        # Her kategori için: o kategoriye ait tüm pair_id'leri topla ve Task 18 yeni 6 çifti içerdiğini kontrol et
+        # Her kategori için: o kategoriye ait tüm pair_id'leri topla ve Task 18 yeni 11 çifti içerdiğini kontrol et
         for cat_key in expected_t18.keys():
                 var cat_pair_ids: Array = []
                 for p in WordData.WORD_PAIRS:
                         if p.get("category", "") == cat_key:
                                 cat_pair_ids.append(p["pair_id"])
-                _assert_eq(cat_pair_ids.size(), 15, "Kategori " + str(cat_key) + " toplam 15 çift (Task 18)")
+                _assert_eq(cat_pair_ids.size(), 20, "Kategori " + str(cat_key) + " toplam 20 çift (Task 18)")
                 for new_pid in expected_t18[cat_key]:
                         _assert_true(cat_pair_ids.has(new_pid), "Kategori " + str(cat_key) + " Task 18 çifti içeriyor: pair_id=" + str(new_pid))
-        # Toplam 84 yeni çift (127-210)
+        # Toplam 154 yeni çift (127-280)
         var total_new: int = 0
         for cat_key in expected_t18.keys():
                 total_new += expected_t18[cat_key].size()
-        _assert_eq(total_new, 84, "14 kategori × 6 yeni çift = 84 (Task 18)")
+        _assert_eq(total_new, 154, "14 kategori × 11 yeni çift = 154 (Task 18)")
         # Yeni çiftlerin Türkçe ve İngilizce alanları boş değil
         var empty_count: int = 0
         for p in WordData.WORD_PAIRS:
@@ -340,20 +340,20 @@ func _test_word_data_new_pairs_task18() -> void:
         for w in t18_en_words:
                 if t18_en_words.count(w) == 1:
                         unique_en += 1
-        _assert_eq(unique_tr, 84, "Task 18 Türkçe kelimelerinin tümü benzersiz")
-        _assert_eq(unique_en, 84, "Task 18 İngilizce kelimelerinin tümü benzersiz")
+        _assert_eq(unique_tr, 154, "Task 18 Türkçe kelimelerinin tümü benzersiz")
+        _assert_eq(unique_en, 154, "Task 18 İngilizce kelimelerinin tümü benzersiz")
         # pool_pair_count testleri
-        _assert_eq(WordData.get_pool_pair_count(["animals", "nature", "body", "school", "clothing", "colors"]), 90, "6 kategori × 15 = 90 (Task 18)")
-        _assert_eq(WordData.get_pool_pair_count(["numbers", "family"]), 30, "numbers + family = 30 (Task 18)")
-        _assert_eq(WordData.get_pool_pair_count(["professions", "emotions"]), 30, "professions + emotions = 30 (Task 18)")
+        _assert_eq(WordData.get_pool_pair_count(["animals", "nature", "body", "school", "clothing", "colors"]), 120, "6 kategori × 20 = 120 (Task 18)")
+        _assert_eq(WordData.get_pool_pair_count(["numbers", "family"]), 40, "numbers + family = 40 (Task 18)")
+        _assert_eq(WordData.get_pool_pair_count(["professions", "emotions"]), 40, "professions + emotions = 40 (Task 18)")
         # has_enough_pairs - Uzman (15) tek kategori ile artık yeterli
         _assert_true(WordData.has_enough_pairs(15, ["animals"]), "Uzman (15) animals yeterli (Task 18 sonrası)")
         _assert_true(WordData.has_enough_pairs(15, ["professions"]), "Uzman (15) professions yeterli (Task 18 sonrası)")
         _assert_true(WordData.has_enough_pairs(15, ["transport"]), "Uzman (15) transport yeterli (Task 18 sonrası)")
-        _assert_false(WordData.has_enough_pairs(20, ["animals"]), "20 çift tek kategori yetersiz (15 < 20)")
+        _assert_true(WordData.has_enough_pairs(20, ["animals"]), "20 çift tek kategori yeterli (20 >= 20)")
         # build_cards 15 çift ile 30 kart üretir
         var cards_full: Array = WordData.build_cards(WordData.get_random_pairs(15, ["animals"]))
-        _assert_eq(cards_full.size(), 30, "15 çift → 30 kart (Task 18 tam havuz)")
+        _assert_eq(cards_full.size(), 30, "15 çift → 30 kart")
 
 
 # --- Main.tscn yeni yapı (iki sütunlu + ConnectionRibbon) ---
@@ -849,23 +849,23 @@ func _test_game_manager_new_categories() -> void:
         if GameManager.selected_categories.size() == 1:
                 _assert_eq(GameManager.selected_categories[0], "professions", "selected[0] = professions")
         # Havuz sayisi (Task 18: professions 15 çift)
-        _assert_eq(GameManager.get_pool_pair_count(), 15, "professions havuz 15 (Task 18)")
+        _assert_eq(GameManager.get_pool_pair_count(), 20, "professions havuz 20 (Task 18)")
         _assert_true(GameManager.has_enough_pairs_for_difficulty() == (15 >= GameManager.total_pairs), "has_enough_pairs_for_difficulty (professions, Task 18: 15)")
 
         # 4 yeni kategori hepsini birden set et (Task 18 sonrası 4 × 15 = 60)
         GameManager.set_categories(["professions", "emotions", "weather", "transport"])
         _assert_eq(GameManager.selected_categories.size(), 4, "4 yeni kategori set edildi")
-        _assert_eq(GameManager.get_pool_pair_count(), 60, "4 yeni kategori havuz 60 (Task 18)")
+        _assert_eq(GameManager.get_pool_pair_count(), 80, "4 yeni kategori havuz 80 (Task 18)")
 
         # Yeni kategori + mevcut kategori karisik (Task 18: 15 + 15 = 30)
         GameManager.set_categories(["animals", "professions"])
         _assert_eq(GameManager.selected_categories.size(), 2, "animals + professions karisik")
-        _assert_eq(GameManager.get_pool_pair_count(), 30, "animals + professions havuz 30 (Task 18)")
+        _assert_eq(GameManager.get_pool_pair_count(), 40, "animals + professions havuz 40 (Task 18)")
 
         # clear_categories -> Karisik mod (Task 18: 210 çift)
         GameManager.clear_categories()
         _assert_eq(GameManager.selected_categories.size(), 0, "clear_categories sonrasi 0")
-        _assert_eq(GameManager.get_pool_pair_count(), 210, "Karisik mod havuz 210 (Task 18)")
+        _assert_eq(GameManager.get_pool_pair_count(), 280, "Karisik mod havuz 280 (Task 18)")
 
         # Bilinmeyen kategori sessizce süzülür
         GameManager.set_categories(["professions", "bilinmeyen_x", "emotions"])
@@ -881,8 +881,8 @@ func _test_word_examples_autoload() -> void:
         if WordExamples == null:
                 return
         # Task 24: 90 → 210 elle yazılmış örnek
-        _assert_eq(WordExamples.EXAMPLES.size(), 210, "EXAMPLES size = 210 (Task 24)")
-        _assert_eq(WordExamples.get_example_count(), 210, "get_example_count = 210 (Task 24)")
+        _assert_eq(WordExamples.EXAMPLES.size(), 280, "EXAMPLES size = 280 (Task 24)")
+        _assert_eq(WordExamples.get_example_count(), 280, "get_example_count = 280 (Task 24)")
         # has_example: 1-210 true, 0/211/-1 false
         _assert_true(WordExamples.has_example(1), "has_example(1) = true")
         _assert_true(WordExamples.has_example(45), "has_example(45) = true")
@@ -891,7 +891,7 @@ func _test_word_examples_autoload() -> void:
         _assert_true(WordExamples.has_example(127), "has_example(127) = true (Task 24)")
         _assert_true(WordExamples.has_example(210), "has_example(210) = true (Task 24)")
         _assert_false(WordExamples.has_example(0), "has_example(0) = false")
-        _assert_false(WordExamples.has_example(211), "has_example(211) = false (Task 24, havuz dışı)")
+        _assert_true(WordExamples.has_example(211), "has_example(211) = true (Task 24)")
         _assert_false(WordExamples.has_example(-1), "has_example(-1) = false")
         # get_example(1): yapı kontrolü
         var ex1: Dictionary = WordExamples.get_example(1)
@@ -933,9 +933,9 @@ func _test_word_examples_autoload() -> void:
         _assert_true(String(ex210.get("tr_sentence", "")).find("Skuter") >= 0 or String(ex210.get("tr_sentence", "")).find("skuter") >= 0, "get_example(210) tr_sentence 'Skuter' içeriyor (Task 24)")
         _assert_true(String(ex210.get("en_sentence", "")).find("scooter") >= 0 or String(ex210.get("en_sentence", "")).find("Scooter") >= 0, "get_example(210) en_sentence 'scooter' içeriyor (Task 24)")
         _assert_true(String(ex210.get("pronunciation", "")).find("skuːtər") >= 0 or String(ex210.get("pronunciation", "")).find("scooter") >= 0, "get_example(210) pronunciation 'scooter' içeriyor (Task 24)")
-        # Task 24: 1-210 arasındaki tüm örnekler dolu (was 1-90)
+        # Task 24: 1-280 arasındaki tüm örnekler dolu
         var empty_count: int = 0
-        for pid in range(1, 211):
+        for pid in range(1, 281):
                 var ex: Dictionary = WordExamples.get_example(pid)
                 if String(ex.get("tr_sentence", "")).length() == 0:
                         empty_count += 1
@@ -943,25 +943,25 @@ func _test_word_examples_autoload() -> void:
                         empty_count += 1
                 if String(ex.get("pronunciation", "")).length() == 0:
                         empty_count += 1
-        _assert_eq(empty_count, 0, "1-210 arası tüm örneklerde tüm alanlar dolu (Task 24)")
+        _assert_eq(empty_count, 0, "1-280 arası tüm örneklerde tüm alanlar dolu (Task 24)")
 
 
-# --- Task 24: WordExamples fallback (pair_id > 210 ve geçersiz) ---
+# --- Task 24: WordExamples fallback (pair_id > 280 ve geçersiz) ---
 func _test_word_examples_fallback() -> void:
-        _begin_test("WordExamples fallback (Task 24, pair_id > 210 ve geçersiz)")
+        _begin_test("WordExamples fallback (Task 24, pair_id > 280 ve geçersiz)")
         if WordExamples == null:
                 _assert_true(false, "WordExamples yüklü olmalı")
                 return
-        # Task 24: pair_id 91/127/210 artık elle yazılmış örnek (fallback DEĞİL)
-        # WordData 210 çift → pair_id > 210 WordData'da yok → boş string döner
+        # Task 24: pair_id 91/127/280 artık elle yazılmış örnek (fallback DEĞİL)
+        # WordData 280 çift → pair_id > 280 WordData'da yok → boş string döner
         # (fallback fonksiyonu _generate_fallback, WordData'da var ama EXAMPLES'ta
-        # yoksa çağrılır; şu an 1-210 tamamen dolu olduğu için fallback yolu hiç
+        # yoksa çağrılır; şu an 1-280 tamamen dolu olduğu için fallback yolu hiç
         # çalışmaz, ama defensive kod olarak korunur).
-        # pair_id 211 (WordData havuz dışı)
-        var ex211: Dictionary = WordExamples.get_example(211)
-        _assert_eq(String(ex211.get("tr_sentence", "X")), "", "get_example(211) tr_sentence boş (Task 24, havuz dışı)")
-        _assert_eq(String(ex211.get("en_sentence", "X")), "", "get_example(211) en_sentence boş (Task 24, havuz dışı)")
-        _assert_eq(String(ex211.get("pronunciation", "X")), "", "get_example(211) pronunciation boş (Task 24, havuz dışı)")
+        # pair_id 281 (WordData havuz dışı)
+        var ex281: Dictionary = WordExamples.get_example(281)
+        _assert_eq(String(ex281.get("tr_sentence", "X")), "", "get_example(281) tr_sentence boş (Task 24, havuz dışı)")
+        _assert_eq(String(ex281.get("en_sentence", "X")), "", "get_example(281) en_sentence boş (Task 24, havuz dışı)")
+        _assert_eq(String(ex281.get("pronunciation", "X")), "", "get_example(281) pronunciation boş (Task 24, havuz dışı)")
         # pair_id 9999 (WordData havuz dışı)
         var ex9999: Dictionary = WordExamples.get_example(9999)
         _assert_eq(String(ex9999.get("tr_sentence", "X")), "", "get_example(9999) tr_sentence boş (havuz dışı)")
