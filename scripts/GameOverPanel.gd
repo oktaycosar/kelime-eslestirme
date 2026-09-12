@@ -81,11 +81,12 @@ func show_panel(score: int, time_sec: float, errors: int, total_pairs: int,
         if record_badge:
                 record_badge.visible = is_new_record
 
-        # En iyi skor satırı
+        # En iyi skor satırı.
+        # Yeni rekor ise RecordBadge zaten "YENİ REKOR!" diyor; aynı metni
+        # burada tekrarlamak yerine satırı gizliyoruz.
         if best_score_label:
                 if is_new_record:
-                        best_score_label.text = "🏆 YENİ REKOR!"
-                        best_score_label.visible = true
+                        best_score_label.visible = false
                 else:
                         var diff: int = DifficultyManager.current_difficulty
                         var best: Dictionary = SaveManager.load_best_record(diff)
